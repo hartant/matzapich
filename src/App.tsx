@@ -131,6 +131,184 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+// ── Interactive Roadmap (click or hover a step → matching detail expands) ──
+const ROADMAP_STEPS = [
+  {
+    emoji: "🔍",
+    label: "Define",
+    sub: "Your Avatar Goal",
+    title: "Define Your Avatar Goal",
+    desc: "Start by deciding what your AI avatar is for.",
+    bullets: [
+      "Define your avatar goal (influencer, UGC, brand content, AI twin)",
+      "Identify your niche and target audience",
+    ],
+    bg: "#EAE7F5", border: "#C9C2E8", icon: "#7B74B8",
+  },
+  {
+    emoji: "✏️",
+    label: "Design",
+    sub: "Your Character DNA",
+    title: "Design Your Character DNA",
+    desc: "Lock in a consistent look you can reuse everywhere.",
+    bullets: [
+      "Create your Character DNA",
+      "Lock in consistent facial features, style, and personality",
+    ],
+    bg: "#F5EDD9", border: "#E3D2A0", icon: "#C99A3D",
+  },
+  {
+    emoji: "🧑",
+    label: "Generate",
+    sub: "Your Base Images",
+    title: "Generate Your Base Images",
+    desc: "Turn your Character DNA into real, usable images.",
+    bullets: [
+      "Generate your first realistic base images",
+      "Produce professional-level realism in every shot",
+    ],
+    bg: "#F2E2D9", border: "#E0C2AE", icon: "#C97A50",
+  },
+  {
+    emoji: "🌐",
+    label: "Expand",
+    sub: "Scenes & Variations",
+    title: "Expand Into Scenes & Variations",
+    desc: "Turn one avatar into a full creative system.",
+    bullets: [
+      "Generate different scenes and environments",
+      "Create lifestyle, aesthetic, and cinematic visuals",
+      "Produce AI product images and campaign shots",
+      "Add realism so your content looks natural",
+    ],
+    bg: "#DCEAF5", border: "#B7D3E8", icon: "#4A87B8",
+  },
+  {
+    emoji: "▶️",
+    label: "Animate",
+    sub: "Images Into Video",
+    title: "Animate Images Into Video",
+    desc: "Bring your avatar to life and publish-ready content.",
+    bullets: [
+      "Animate images into talking clips and scenes",
+      "Create AI B-roll and aesthetic video shots",
+      "Add voice and movement",
+      "Assemble everything into social media content",
+    ],
+    bg: "#F7DEDE", border: "#EDBBBB", icon: "#D06060",
+  },
+  {
+    emoji: "💰",
+    label: "Scale",
+    sub: "A Profitable Business",
+    title: "Scale Into a Profitable Business",
+    desc: "Turn your workflow into a repeatable offer.",
+    bullets: [
+      "Offer AI content as a service to brands and clients",
+      "Build a repeatable posting and sales pipeline",
+      "Turn your avatar into your own scalable content brand",
+    ],
+    bg: "#DEEEDA", border: "#B9DCAF", icon: "#5F9E52",
+  },
+] as const;
+
+function InteractiveRoadmap() {
+  const [active, setActive] = useState<number | null>(null);
+  const current = active !== null ? ROADMAP_STEPS[active] : null;
+
+  return (
+    <section style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)`, padding: "64px 24px 72px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+        <h2 style={{ ...inter(800, 20, "0.04em"), color: C.text, marginBottom: 8, textTransform: "uppercase" }}>
+          Visual Roadmap
+        </h2>
+        <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 40 }}>
+          Click a step to see what's inside
+        </p>
+
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-start", gap: 6 }}>
+          {ROADMAP_STEPS.map((step, i) => {
+            const isActive = active === i;
+            return (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <div
+                  onClick={() => setActive(isActive ? null : i)}
+                  onMouseEnter={() => setActive(i)}
+                  style={{ textAlign: "center", width: 88, cursor: "pointer" }}
+                >
+                  <div
+                    style={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: 18,
+                      backgroundColor: isActive ? step.bg : C.lav2,
+                      border: `1.5px solid ${isActive ? step.border : C.border}`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 24,
+                      margin: "0 auto 8px",
+                      transform: isActive ? "translateY(-4px) scale(1.06)" : "none",
+                      boxShadow: isActive ? `0 8px 20px -8px ${step.border}` : "none",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {step.emoji}
+                  </div>
+                  <p style={{ ...inter(700, 10.5, "0.06em"), color: isActive ? step.icon : C.text, marginBottom: 3, textTransform: "uppercase", transition: "color 0.2s" }}>
+                    {step.label}
+                  </p>
+                  <p style={{ ...inter(400, 10), color: C.textSub, lineHeight: 1.35 }}>{step.sub}</p>
+                </div>
+                {i < ROADMAP_STEPS.length - 1 && (
+                  <span style={{ color: C.purple, fontSize: 18, marginBottom: 26, flexShrink: 0 }}>→</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Expanding detail panel — themed to match the active step */}
+        <div
+          style={{
+            maxHeight: current ? 400 : 0,
+            opacity: current ? 1 : 0,
+            overflow: "hidden",
+            transition: "max-height 0.35s ease, opacity 0.25s ease, margin 0.35s ease",
+            marginTop: current ? 32 : 0,
+          }}
+        >
+          {current && (
+            <div
+              style={{
+                backgroundColor: current.bg,
+                border: `1.5px solid ${current.border}`,
+                borderRadius: 20,
+                padding: "28px 32px",
+                textAlign: "left",
+                maxWidth: 560,
+                margin: "0 auto",
+              }}
+            >
+              <p style={{ ...inter(800, 16, "-0.01em"), color: current.icon, marginBottom: 6 }}>{current.title}</p>
+              <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.6, marginBottom: 16 }}>{current.desc}</p>
+              {current.bullets.map((b, j) => (
+                <p key={j} style={{ ...inter(400, 12.5), color: C.text, lineHeight: 1.6, marginBottom: 6 }}>
+                  • {b}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginTop: 40 }}>
+          <a href="#pricing" style={pillBtn(C.purple, C.white)}>Join the Course</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Gallery row ───────────────────────────────────────────────────────────────
 function GalleryRow({ images, height = 240 }: { images: string[]; height?: number }) {
   return (
@@ -415,7 +593,8 @@ export default function App() {
       
       
       
-        <InteractiveRoadmap />
+      <InteractiveRoadmap />
+
       {/* ── TESTIMONIALS ────────────────────────────────────────────────────── */}
       <section id="testimonials" style={{ backgroundColor: C.bg, padding: "0 24px 72px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
