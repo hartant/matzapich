@@ -415,8 +415,7 @@ export default function App() {
       
       
       
-      <InteractiveRoadmap />
-
+        <InteractiveRoadmap />
       {/* ── TESTIMONIALS ────────────────────────────────────────────────────── */}
       <section id="testimonials" style={{ backgroundColor: C.bg, padding: "0 24px 72px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
