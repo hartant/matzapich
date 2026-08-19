@@ -131,13 +131,83 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+// ── Lightbox (click any image to expand it) ─────────────────────────────────
+function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
+  if (!src) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 200,
+        backgroundColor: "rgba(20,18,32,0.86)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 24, cursor: "zoom-out",
+        animation: "fadeIn 0.15s ease",
+      }}
+    >
+      <button
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        aria-label="Close"
+        style={{
+          position: "absolute", top: 20, right: 20,
+          width: 40, height: 40, borderRadius: "50%",
+          backgroundColor: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.3)",
+          color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+        }}
+      >
+        ✕
+      </button>
+      <img
+        src={src}
+        alt=""
+        onClick={(e) => e.stopPropagation()}
+        style={{ maxWidth: "min(90vw, 720px)", maxHeight: "85vh", borderRadius: 20, objectFit: "contain", boxShadow: "0 30px 80px rgba(0,0,0,0.5)" }}
+      />
+    </div>
+  );
+}
+
+// ── Expandable card (click header to reveal details) ────────────────────────
+function ExpandCard({
+  title, teaser, children,
+}: { title: string; teaser: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      onClick={() => setOpen(!open)}
+      style={{
+        backgroundColor: "#F7F5F0",
+        border: `1px solid ${C.border}`,
+        borderRadius: 20,
+        padding: "28px 24px",
+        textAlign: "center",
+        cursor: "pointer",
+        transition: "box-shadow 0.2s, border-color 0.2s",
+        boxShadow: open ? "0 12px 30px rgba(61,59,91,0.12)" : "none",
+        borderColor: open ? C.purple : C.border,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 10 }}>
+        <p style={{ ...inter(800, 14, "0.04em"), color: C.text, textTransform: "uppercase", margin: 0 }}>{title}</p>
+        <span style={{ color: C.purple, fontSize: 18, flexShrink: 0, transition: "transform 0.25s", transform: open ? "rotate(45deg)" : "none", display: "inline-block", lineHeight: 1 }}>+</span>
+      </div>
+      <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginBottom: open ? 14 : 0 }}>{teaser}</p>
+      {open && <div onClick={(e) => e.stopPropagation()}>{children}</div>}
+    </div>
+  );
+}
+
 // ── Gallery row ───────────────────────────────────────────────────────────────
-function GalleryRow({ images, height = 240 }: { images: string[]; height?: number }) {
+function GalleryRow({ images, height = 240, onImageClick }: { images: string[]; height?: number; onImageClick?: (src: string) => void }) {
   return (
     <div style={{ overflowX: "auto" }}>
       <div style={{ display: "flex", gap: 12, padding: "0 24px", width: "max-content" }}>
         {images.map((src, i) => (
-          <div key={i} style={{ width: 178, height, borderRadius: 16, overflow: "hidden", backgroundColor: C.lavender, flexShrink: 0 }}>
+          <div
+            key={i}
+            onClick={() => onImageClick?.(src)}
+            style={{ width: 178, height, borderRadius: 16, overflow: "hidden", backgroundColor: C.lavender, flexShrink: 0, cursor: onImageClick ? "zoom-in" : "default" }}
+          >
             <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           </div>
         ))}
@@ -149,6 +219,7 @@ function GalleryRow({ images, height = 240 }: { images: string[]; height?: numbe
 // ── Main app ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   const row1 = [imgPortrait1, imgPortrait2, imgPortrait3, imgPortrait4, imgPortrait5, imgPortrait6];
   const row2 = [imgPortrait7, imgPortrait8, imgPortrait9, imgPortrait10, imgPortrait11, imgPortrait12];
@@ -156,6 +227,7 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", color: C.text, backgroundColor: C.bg }}>
+      <Lightbox src={lightbox} onClose={() => setLightbox(null)} />
 
       {/* ── NAV ────────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -208,9 +280,15 @@ export default function App() {
       <section style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)`, paddingBottom: 72 }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "40px 24px 0" }}>
           <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", backgroundColor: C.lavender }}>
-            <img src={imgHero} alt="Let AI Pay Your Bills" style={{ width: "100%", height: 540, objectFit: "cover", objectPosition: "center 25%", display: "block" }} />
+            <img
+              src={imgHero}
+              alt="Let AI Pay Your Bills"
+              onClick={() => setLightbox(imgHero)}
+              className="h-[380px] md:h-[540px]"
+              style={{ width: "100%", objectFit: "cover", objectPosition: "center 25%", display: "block", cursor: "zoom-in" }}
+            />
             {/* overlay */}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)", pointerEvents: "none" }} />
 
             {/* badge top-right */}
             <div style={{ position: "absolute", top: 18, right: 18, backgroundColor: "rgba(61,59,91,0.55)", backdropFilter: "blur(10px)", borderRadius: 999, padding: "7px 16px", display: "flex", alignItems: "center", gap: 8 }}>
@@ -219,14 +297,14 @@ export default function App() {
             </div>
 
             {/* text bottom-left */}
-            <div style={{ position: "absolute", bottom: 0, left: 0, padding: "0 44px 44px", maxWidth: 520 }}>
-              <h1 style={{ ...inter(800, 44, "-0.01em"), color: "#fff", margin: "0 0 12px", lineHeight: 1.1 }}>
+            <div className="px-6 pb-8 md:px-11 md:pb-11" style={{ position: "absolute", bottom: 0, left: 0, right: 0, maxWidth: 520, pointerEvents: "none" }}>
+              <h1 className="text-[30px] md:text-[44px]" style={{ ...inter(800, 44, "-0.01em"), color: "#fff", margin: "0 0 12px", lineHeight: 1.1 }}>
                 Let AI Pay Your Bills
               </h1>
               <p style={{ ...inter(400, 14), color: "rgba(255,255,255,0.82)", lineHeight: 1.65, margin: "0 0 24px" }}>
                 Turn AI into your creative advantage. Learn how to build avatars, generate content, and create high-quality visuals that feel real, scalable, and ready to monetize.
               </p>
-              <a href="#pricing" style={{ ...pillBtn(C.bg, C.text), fontSize: 12 }}>
+              <a href="#pricing" style={{ ...pillBtn(C.bg, C.text), fontSize: 12, pointerEvents: "auto" }}>
                 Build Your Avatar
               </a>
             </div>
@@ -252,8 +330,8 @@ export default function App() {
             </div>
 
             {/* two columns */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              <div style={{ padding: "28px 32px", borderRight: `1px solid ${C.borderWarm}` }}>
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <div className="border-b md:border-b-0 md:border-r" style={{ padding: "28px 32px", borderColor: C.borderWarm }}>
                 <p style={{ ...inter(600, 10, "0.18em"), color: C.textSub, textTransform: "uppercase", marginBottom: 20 }}>This is not for you if:</p>
                 {[
                   "You're only curious about AI but don't plan to actually create anything",
@@ -330,7 +408,7 @@ export default function App() {
             Most people trying AI run into the same problems.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 36 }}>
+          <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 14, marginBottom: 36 }}>
             {[
               { img: imgHero,       label: "Fake-looking results",   fix: "Our Character DNA system" },
               { img: imgPortrait1,  label: "Bad prompting",          fix: "Our curated prompt library" },
@@ -338,7 +416,7 @@ export default function App() {
               { img: imgPortrait3,  label: "No clear workflow",      fix: "Our step-by-step roadmap" },
             ].map((c, i) => (
               <div key={i}>
-                <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", backgroundColor: C.lavender, marginBottom: 10 }}>
+                <div onClick={() => setLightbox(c.img)} style={{ position: "relative", borderRadius: 16, overflow: "hidden", backgroundColor: C.lavender, marginBottom: 10, cursor: "zoom-in" }}>
                   <img src={c.img} alt={c.label} style={{ width: "100%", height: 172, objectFit: "cover", display: "block" }} />
                   <div style={{ position: "absolute", top: 8, left: 8 }}>
                     <span style={{ backgroundColor: "rgba(255,255,255,0.9)", borderRadius: 999, padding: "3px 10px", fontSize: 9, color: C.text, fontWeight: 600 }}>
@@ -379,9 +457,9 @@ export default function App() {
             These are the types of content and visuals you'll learn<br />how to create inside the course.
           </p>
         </div>
-        <GalleryRow images={row1} />
+        <GalleryRow images={row1} onImageClick={setLightbox} />
         <div style={{ marginBottom: 12 }} />
-        <GalleryRow images={row2} />
+        <GalleryRow images={row2} onImageClick={setLightbox} />
         <div style={{ marginBottom: 60 }} />
       </section>
 
@@ -458,7 +536,7 @@ export default function App() {
             A complete workflow for creating realistic AI avatars, generating content, and turning it into videos, posts, and campaigns.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+          <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 16 }}>
             {[
               {
                 title: "Avatar Foundation",
@@ -480,9 +558,7 @@ export default function App() {
                 outro: "At the end of this step, you'll have a complete AI post ready to publish.",
               },
             ].map((mod, i) => (
-              <Card key={i} style={{ textAlign: "center", backgroundColor: "#F7F5F0", padding: "28px 24px" }}>
-                <p style={{ ...inter(800, 14, "0.04em"), color: C.text, marginBottom: 14, textTransform: "uppercase" }}>{mod.title}</p>
-                <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginBottom: 14 }}>{mod.intro}</p>
+              <ExpandCard key={i} title={mod.title} teaser={mod.intro}>
                 <p style={{ ...inter(600, 10, "0.14em"), color: C.textSub, textTransform: "uppercase", marginBottom: 12 }}>Inside this step you'll learn how to:</p>
                 {mod.bullets.map((b, j) => (
                   <p key={j} style={{ ...inter(400, 12), color: C.text, lineHeight: 1.5, marginBottom: 8, textAlign: "left" }}>• {b}</p>
@@ -490,7 +566,7 @@ export default function App() {
                 <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginTop: 14 }}>
                   {mod.outroJsx ?? mod.outro}
                 </p>
-              </Card>
+              </ExpandCard>
             ))}
           </div>
         </div>
@@ -507,7 +583,7 @@ export default function App() {
             Rated 5 stars by students
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 12 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
             {[
               { name: "Sofia M.", text: "I had zero experience with AI and now I have a full avatar with a consistent look across dozens of images. The prompting system alone is worth it." },
               { name: "Lena K.", text: "I'm a UGC creator and this completely changed how I work. I can now offer AI content as an add-on service and it's become my most in-demand offering." },
@@ -520,7 +596,7 @@ export default function App() {
               </Card>
             ))}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, maxWidth: 600, margin: "0 auto" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 12, maxWidth: 600, margin: "0 auto" }}>
             {[
               { name: "Chiara B.", text: "As a brand owner I was spending thousands on photographers. Now I produce my own campaign visuals with AI. The quality is genuinely impressive." },
               { name: "Jess T.", text: "I tried three other AI courses and none of them showed me what this one does. The roadmap makes everything click — it's a proper system, not just tips." },
@@ -540,7 +616,7 @@ export default function App() {
         <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", textAlign: "center", padding: "52px 24px 20px" }}>
           Take a look at our students' work:
         </p>
-        <GalleryRow images={eyeRow} />
+        <GalleryRow images={eyeRow} onImageClick={setLightbox} />
         <div style={{ padding: "48px 24px 20px", textAlign: "center" }}>
           <p style={{ ...inter(700, 13, "0.08em"), color: C.text, textTransform: "uppercase", marginBottom: 6 }}>
             Our students are already learning how to create content with AI
@@ -566,14 +642,14 @@ export default function App() {
             Instead of watching the AI revolution from the sidelines, you'll learn how to actually use it.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, alignItems: "center", maxWidth: 800, margin: "0 auto 64px" }}>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr]" style={{ gap: 0, alignItems: "center", maxWidth: 800, margin: "0 auto 64px" }}>
             <Card style={{ textAlign: "center" }}>
               <p style={{ ...inter(700, 11, "0.1em"), color: C.textSub, textTransform: "uppercase", marginBottom: 20 }}>Without this course</p>
               {["Random prompting and inconsistent results", "AI images that look fake or unusable", "No consistent avatar or character", "No idea how to turn images into real content", "Constantly testing tools without a clear workflow"].map((t, i) => (
                 <p key={i} style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, marginBottom: 12, opacity: 0.82 }}>• {t}</p>
               ))}
             </Card>
-            <div style={{ padding: "0 18px", color: C.purple, fontSize: 22, flexShrink: 0, marginBottom: 20 }}>→</div>
+            <div className="rotate-90 md:rotate-0" style={{ padding: "12px 18px", color: C.purple, fontSize: 22, flexShrink: 0, marginBottom: 20, textAlign: "center" }}>→</div>
             <Card style={{ textAlign: "center", borderColor: C.purple }}>
               <p style={{ ...inter(700, 11, "0.1em"), color: C.purple, textTransform: "uppercase", marginBottom: 20 }}>With this course</p>
               {["A clear system for creating realistic AI avatars", "Consistent characters you can reuse across content", "The ability to generate images, videos, and scenes", "A workflow to turn everything into posts and campaigns", "A skill that can be used for creators, brands, or client work"].map((t, i) => (
@@ -584,7 +660,7 @@ export default function App() {
 
           {/* Market Reality */}
           <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 28 }}>Market Reality</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 14 }}>
             {[
               { pct: "91%", bold: "Of brands say visual content is their top marketing priority", desc: "But producing that content consistently is still expensive and time-consuming." },
               { pct: "70%", bold: "Of marketers say they need more content than ever before", desc: "Yet most teams still struggle to keep up with demand." },
@@ -614,9 +690,9 @@ export default function App() {
           <h2 style={{ ...inter(800, 22, "-0.01em"), color: C.text, margin: "12px 0 36px", textTransform: "uppercase" }}>
             This is your chance to be ahead of the game
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, maxWidth: 680, margin: "0 auto 32px" }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3" style={{ gap: 12, maxWidth: 680, margin: "0 auto 32px" }}>
             {[imgPortrait4, imgPortrait5, imgPortrait6].map((src, i) => (
-              <div key={i} style={{ borderRadius: 18, overflow: "hidden", backgroundColor: C.lavender }}>
+              <div key={i} onClick={() => setLightbox(src)} style={{ borderRadius: 18, overflow: "hidden", backgroundColor: C.lavender, cursor: "zoom-in" }}>
                 <img src={src} alt="" style={{ width: "100%", height: 220, objectFit: "cover", display: "block" }} />
               </div>
             ))}
@@ -626,16 +702,15 @@ export default function App() {
           </p>
 
           <p style={{ ...inter(800, 18, "0.08em"), color: C.text, textTransform: "uppercase", marginBottom: 24 }}>Case Studies</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 14 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 14, marginBottom: 14 }}>
             {[
-              { name: "Sarah — UGC Creator", result: "Tripled her client roster in 60 days by replacing all filming with AI-generated content. Now produces 20+ pieces per week." },
-              { name: "Lumé Cosmetics", result: "Replaced monthly photoshoots with AI campaign visuals. Saved €4,200 in production costs in the first month." },
-              { name: "Marco — Freelancer", result: "Added AI content services to his agency. Landed 2 retainer clients at €1,500/month each within 45 days of completing the course." },
+              { name: "Sarah — UGC Creator", teaser: "Tripled her client roster in 60 days.", result: "Tripled her client roster in 60 days by replacing all filming with AI-generated content. Now produces 20+ pieces per week." },
+              { name: "Lumé Cosmetics", teaser: "Saved €4,200 in production costs.", result: "Replaced monthly photoshoots with AI campaign visuals. Saved €4,200 in production costs in the first month." },
+              { name: "Marco — Freelancer", teaser: "Landed 2 retainer clients in 45 days.", result: "Added AI content services to his agency. Landed 2 retainer clients at €1,500/month each within 45 days of completing the course." },
             ].map((cs, i) => (
-              <Card key={i} style={{ textAlign: "left" }}>
-                <p style={{ ...inter(700, 11, "0.08em"), color: C.purple, marginBottom: 10 }}>{cs.name}</p>
-                <p style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, opacity: 0.82 }}>{cs.result}</p>
-              </Card>
+              <ExpandCard key={i} title={cs.name} teaser={cs.teaser}>
+                <p style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, opacity: 0.82, textAlign: "left" }}>{cs.result}</p>
+              </ExpandCard>
             ))}
           </div>
           <p style={{ ...inter(400, 12), color: C.textSub, lineHeight: 1.7 }}>
