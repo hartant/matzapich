@@ -412,89 +412,10 @@ export default function App() {
           </div>
         </div>
       </section>
-
-      {/* ── VISUAL ROADMAP ──────────────────────────────────────────────────── */}
-      <section style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)`, padding: "64px 24px 72px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 20, "0.04em"), color: C.text, marginBottom: 8, textTransform: "uppercase" }}>Visual Roadmap</h2>
-          <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 48 }}>
-            Your step-by-step path to building your AI creation system
-          </p>
-
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-start", gap: 6 }}>
-            {[
-              { emoji: "🔍", label: "Define",    sub: "Your Avatar Goal" },
-              { emoji: "✏️", label: "Design",   sub: "Your Character DNA" },
-              { emoji: "🧑", label: "Generate", sub: "Your Base Images" },
-              { emoji: "🌐", label: "Expand",   sub: "Scenes & Variations" },
-              { emoji: "▶️", label: "Animate",  sub: "Images Into Video" },
-              { emoji: "💰", label: "Scale",    sub: "A Profitable Business" },
-            ].map((step, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <div style={{ textAlign: "center", width: 88 }}>
-                  <div style={{ width: 64, height: 64, borderRadius: 18, backgroundColor: C.lav2, border: `1.5px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, margin: "0 auto 8px" }}>
-                    {step.emoji}
-                  </div>
-                  <p style={{ ...inter(700, 10.5, "0.06em"), color: C.text, marginBottom: 3, textTransform: "uppercase" }}>{step.label}</p>
-                  <p style={{ ...inter(400, 10), color: C.textSub, lineHeight: 1.35 }}>{step.sub}</p>
-                </div>
-                {i < 5 && <span style={{ color: C.purple, fontSize: 18, marginBottom: 26, flexShrink: 0 }}>→</span>}
-              </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: 44 }}>
-            <a href="#pricing" style={pillBtn(C.purple, C.white)}>Join the Course</a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3 MODULES ───────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "72px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <SectionLabel>How can you create AI campaigns like this? Introducing…</SectionLabel>
-          <h2 style={{ ...inter(800, 26, "-0.01em"), color: C.text, margin: "0 0 14px" }}>Let AI Pay Your Bills</h2>
-          <p style={{ ...inter(400, 14), color: C.textSub, lineHeight: 1.7, maxWidth: 520, margin: "0 auto 44px" }}>
-            A complete workflow for creating realistic AI avatars, generating content, and turning it into videos, posts, and campaigns.
-          </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-            {[
-              {
-                title: "Avatar Foundation",
-                intro: "Build a character that stays consistent across every image and video.",
-                bullets: ["Define your avatar goal (influencer, UGC, brand content, AI twin)", "Create your Character DNA", "Generate your first realistic base images"],
-                outro: "Once this foundation is set, your avatar becomes reusable across unlimited content.",
-              },
-              {
-                title: "Image Generation",
-                intro: "Turn your avatar into a full creative system.",
-                bullets: ["Generate different scenes and environments", "Create lifestyle, aesthetic, and cinematic visuals", "Produce AI product images and campaign shots", "Add realism so your content looks natural"],
-                outro: null,
-                outroJsx: <span>This is where your avatar starts becoming <strong>real content.</strong></span>,
-              },
-              {
-                title: "Video & Content Creation",
-                intro: "Bring your avatar to life and turn everything into publishable posts.",
-                bullets: ["Animate images into talking clips and scenes", "Create AI B-roll and aesthetic video shots", "Add voice and movement", "Assemble everything into social media content"],
-                outro: "At the end of this step, you'll have a complete AI post ready to publish.",
-              },
-            ].map((mod, i) => (
-              <Card key={i} style={{ textAlign: "center", backgroundColor: "#F7F5F0", padding: "28px 24px" }}>
-                <p style={{ ...inter(800, 14, "0.04em"), color: C.text, marginBottom: 14, textTransform: "uppercase" }}>{mod.title}</p>
-                <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginBottom: 14 }}>{mod.intro}</p>
-                <p style={{ ...inter(600, 10, "0.14em"), color: C.textSub, textTransform: "uppercase", marginBottom: 12 }}>Inside this step you'll learn how to:</p>
-                {mod.bullets.map((b, j) => (
-                  <p key={j} style={{ ...inter(400, 12), color: C.text, lineHeight: 1.5, marginBottom: 8, textAlign: "left" }}>• {b}</p>
-                ))}
-                <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginTop: 14 }}>
-                  {mod.outroJsx ?? mod.outro}
-                </p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      
+      
+      
+      <InteractiveRoadmap />
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────────── */}
       <section id="testimonials" style={{ backgroundColor: C.bg, padding: "0 24px 72px" }}>
