@@ -1,84 +1,76 @@
 import { useState } from "react";
 
 // ── Real images from Figma import ────────────────────────────────────────────
-import imgHero        from "@/imports/Page2/703432a5fcb56e67a41d0f46e4538e3a43968100.png";
-import imgPortrait1   from "@/imports/Page2/2af44579108020ea641e506123286f8a8c1cc76b.png";
-import imgPortrait2   from "@/imports/Page2/bbc436bbc08a30d121dc0fe5e00b51da913ec261.png";
-import imgPortrait3   from "@/imports/Page2/d3a6871fd80422d83b461eb75939e32e3421b9e1.png";
-import imgPortrait4   from "@/imports/Page2/e64e31f159f3d6b4f5d13b93548f0aa6ac8a6f81.png";
-import imgPortrait5   from "@/imports/Page2/b2985d940787aa94ee1a5ff978b6a34e56c8e5d5.png";
-import imgPortrait6   from "@/imports/Page2/1e4a93389883e182385bb00f2101c871f7b6afcc.png";
-import imgPortrait7   from "@/imports/Page2/d84741470c25cf5aa7c49667a999fb596b7b5089.png";
-import imgPortrait8   from "@/imports/Page2/5c807ce5cd3ff461916b19c0ad21c3ac9231d72a.png";
-import imgPortrait9   from "@/imports/Page2/888081930c94ddc71bf3c890aea77ed06deb0991.png";
-import imgPortrait10  from "@/imports/Page2/c3ecf452f42cb92f7fde554c6b8eb80d8762bb18.png";
-import imgPortrait11  from "@/imports/Page2/710b8574c159273c2bd5bec07cb9744c3f02abb5.png";
-import imgPortrait12  from "@/imports/Page2/72507aa8629ee5118196e6f119230e10653da8e9.png";
-import imgPortrait13  from "@/imports/Page2/faad31936791cffc3b8052d98baeaa24fe385519.png";
-import imgPortrait14  from "@/imports/Page2/752501fbb40b692a09c75bf1a78802aa47cacffd.png";
-import imgPortrait15  from "@/imports/Page2/7c3ed2b81d5062fc087512990742e71603eecd82.png";
-import imgPortrait16  from "@/imports/Page2/e3e07d44c933aced3b99b064e049ac985ccfe90f.png";
+import imgHero        from "@/assets/703432a5fcb56e67a41d0f46e4538e3a43968100.png";
+import imgPortrait1   from "@/assets/2af44579108020ea641e506123286f8a8c1cc76b.png";
+import imgPortrait2   from "@/assets/bbc436bbc08a30d121dc0fe5e00b51da913ec261.png";
+import imgPortrait3   from "@/assets/d3a6871fd80422d83b461eb75939e32e3421b9e1.png";
+import imgPortrait4   from "@/assets/e64e31f159f3d6b4f5d13b93548f0aa6ac8a6f81.png";
+import imgPortrait5   from "@/assets/b2985d940787aa94ee1a5ff978b6a34e56c8e5d5.png";
+import imgPortrait6   from "@/assets/1e4a93389883e182385bb00f2101c871f7b6afcc.png";
+import imgPortrait7   from "@/assets/d84741470c25cf5aa7c49667a999fb596b7b5089.png";
+import imgPortrait8   from "@/assets/5c807ce5cd3ff461916b19c0ad21c3ac9231d72a.png";
+import imgPortrait9   from "@/assets/888081930c94ddc71bf3c890aea77ed06deb0991.png";
+import imgPortrait10  from "@/assets/c3ecf452f42cb92f7fde554c6b8eb80d8762bb18.png";
+import imgPortrait11  from "@/assets/710b8574c159273c2bd5bec07cb9744c3f02abb5.png";
+import imgPortrait12  from "@/assets/72507aa8629ee5118196e6f119230e10653da8e9.png";
+import imgPortrait13  from "@/assets/faad31936791cffc3b8052d98baeaa24fe385519.png";
+import imgPortrait14  from "@/assets/752501fbb40b692a09c75bf1a78802aa47cacffd.png";
+import imgPortrait15  from "@/assets/7c3ed2b81d5062fc087512990742e71603eecd82.png";
+import imgPortrait16  from "@/assets/e3e07d44c933aced3b99b064e049ac985ccfe90f.png";
 
-// ── Exact Figma colours ──────────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════════════════
+// DESIGN TOKENS
+// ═════════════════════════════════════════════════════════════════════════
 const C = {
-  bg:        "#F1EEEC",   // warm cream
-  text:      "#3d3b5b",   // dark navy-purple
-  purple:    "#888FCD",   // periwinkle accent
-  lavender:  "#E4E0F0",   // soft lavender
-  lav2:      "#EAE7F5",   // lighter lavender for cards
-  white:     "#FFFFFF",
-  star:      "#F1F8AF",   // yellow-green stars
-  border:    "#D4D0E4",   // soft border
-  borderWarm:"#D8D4C8",   // warm cream border
-  textSub:   "#6B6890",   // muted purple-grey
+  bg: "#F1EEEC",
+  text: "#3d3b5b",
+  purple: "#888FCD",
+  lavender: "#E4E0F0",
+  lav2: "#EAE7F5",
+  white: "#FFFFFF",
+  star: "#F1F8AF",
+  border: "#D4D0E4",
+  borderWarm: "#D8D4C8",
+  textSub: "#6B6890",
+  card: "#F7F5F0",
 } as const;
 
-// ── Section background helpers ────────────────────────────────────────────────
-const S = {
-  cream:    `background-color: ${C.bg}`,
-  heroGrad: `background: radial-gradient(ellipse 80% 60% at 50% 0%, ${C.lavender} 0%, ${C.bg} 70%)`,
-  lavGrad:  `background: linear-gradient(180deg, ${C.lavender} 0%, #EAE7F5 40%, ${C.bg} 100%)`,
-  lavSolid: `background-color: ${C.lavender}`,
-  studentBand: `background: linear-gradient(180deg, ${C.bg} 0%, ${C.lavender} 20%, ${C.lavender} 80%, ${C.bg} 100%)`,
-};
+const NAV_LINKS = ["Testimonials", "Curriculum", "Success", "Pricing", "FAQ"];
 
-// ── Inline style builder ─────────────────────────────────────────────────────
-type CSSObj = React.CSSProperties;
+// ═════════════════════════════════════════════════════════════════════════
+// PRIMITIVES
+// ═════════════════════════════════════════════════════════════════════════
 
-const inter = (w: number, size: number, spacing?: string): CSSObj => ({
-  fontFamily: "'Inter', sans-serif",
-  fontWeight: w,
-  fontSize: size,
-  letterSpacing: spacing ?? "normal",
-});
-
-const pillBtn = (bg: string, color: string): CSSObj => ({
-  ...inter(700, 12, "0.1em"),
-  backgroundColor: bg,
-  color,
-  borderRadius: 999,
-  padding: "13px 32px",
-  display: "inline-block",
-  textDecoration: "none",
-  textTransform: "uppercase" as const,
-  cursor: "pointer",
-  transition: "opacity 0.2s",
-  border: "none",
-});
-
-// ── Reusable atoms ────────────────────────────────────────────────────────────
-function Stars() {
+function PillButton({
+  href, children, variant = "dark", className = "",
+}: { href: string; children: React.ReactNode; variant?: "dark" | "purple" | "light"; className?: string }) {
+  const styles = {
+    dark: { backgroundColor: C.text, color: C.white },
+    purple: { backgroundColor: C.purple, color: C.white },
+    light: { backgroundColor: C.bg, color: C.text },
+  }[variant];
   return (
-    <span style={{ color: C.star, fontSize: 14, letterSpacing: 2 }}>★★★★★</span>
+    <a
+      href={href}
+      className={`inline-block rounded-full px-8 py-3.5 text-[12px] font-bold uppercase tracking-[0.1em] no-underline transition-opacity hover:opacity-85 ${className}`}
+      style={styles}
+    >
+      {children}
+    </a>
   );
 }
 
-function ArrowDown({ color = C.purple }: { color?: string }) {
+function Stars() {
+  return <span style={{ color: C.star, fontSize: 14, letterSpacing: 2 }}>★★★★★</span>;
+}
+
+function ArrowDown({ color = C.purple, className = "" }: { color?: string; className?: string }) {
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+    <div className={`flex justify-center mb-1 ${className}`}>
       <svg width="14" height="24" viewBox="0 0 14 24" fill="none">
-        <line x1="7" y1="0" x2="7" y2="20" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-        <polyline points="2,14 7,20 12,14" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <line x1="7" y1="0" x2="7" y2="20" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+        <polyline points="2,14 7,20 12,14" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
   );
@@ -86,74 +78,37 @@ function ArrowDown({ color = C.purple }: { color?: string }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 12 }}>
+    <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>
       {children}
     </p>
   );
 }
 
-function Card({ children, style }: { children: React.ReactNode; style?: CSSObj }) {
+function Card({ children, className = "", accent = false }: { children: React.ReactNode; className?: string; accent?: boolean }) {
   return (
-    <div style={{
-      backgroundColor: C.white,
-      border: `1px solid ${C.border}`,
-      borderRadius: 20,
-      padding: "24px 28px",
-      ...style,
-    }}>
+    <div
+      className={`rounded-[20px] p-6 md:p-7 ${className}`}
+      style={{ backgroundColor: C.white, border: `1px solid ${accent ? C.purple : C.border}` }}
+    >
       {children}
     </div>
   );
 }
 
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      onClick={() => setOpen(!open)}
-      style={{
-        backgroundColor: open ? C.lav2 : C.white,
-        border: `1px solid ${C.border}`,
-        borderRadius: 16,
-        overflow: "hidden",
-        cursor: "pointer",
-        transition: "background 0.2s",
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 24px" }}>
-        <span style={{ ...inter(700, 12, "0.05em"), color: C.text, textTransform: "uppercase", paddingRight: 16 }}>{q}</span>
-        <span style={{ color: C.purple, fontSize: 22, flexShrink: 0, transition: "transform 0.25s", transform: open ? "rotate(45deg)" : "none", display: "inline-block", lineHeight: 1 }}>+</span>
-      </div>
-      {open && (
-        <p style={{ ...inter(400, 13), color: C.text, opacity: 0.8, lineHeight: 1.7, padding: "0 24px 20px" }}>{a}</p>
-      )}
-    </div>
-  );
-}
-
-// ── Lightbox (click any image to expand it) ─────────────────────────────────
+/** Click any image to zoom it full-screen. */
 function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
   if (!src) return null;
   return (
     <div
       onClick={onClose}
-      style={{
-        position: "fixed", inset: 0, zIndex: 200,
-        backgroundColor: "rgba(20,18,32,0.86)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        padding: 24, cursor: "zoom-out",
-        animation: "fadeIn 0.15s ease",
-      }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6 cursor-zoom-out"
+      style={{ backgroundColor: "rgba(20,18,32,0.86)" }}
     >
       <button
         onClick={(e) => { e.stopPropagation(); onClose(); }}
         aria-label="Close"
-        style={{
-          position: "absolute", top: 20, right: 20,
-          width: 40, height: 40, borderRadius: "50%",
-          backgroundColor: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.3)",
-          color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-        }}
+        className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full text-white text-lg"
+        style={{ backgroundColor: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.3)" }}
       >
         ✕
       </button>
@@ -161,62 +116,72 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
         src={src}
         alt=""
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: "min(90vw, 720px)", maxHeight: "85vh", borderRadius: 20, objectFit: "contain", boxShadow: "0 30px 80px rgba(0,0,0,0.5)" }}
+        className="rounded-[20px] object-contain"
+        style={{ maxWidth: "min(90vw, 720px)", maxHeight: "85vh", boxShadow: "0 30px 80px rgba(0,0,0,0.5)" }}
       />
     </div>
   );
 }
 
-// ── Expandable card (click header to reveal details) ────────────────────────
-function ExpandCard({
-  title, teaser, children,
-}: { title: string; teaser: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+/** Zoomable image tile, used across every gallery / grid. */
+function ZoomImg({
+  src, alt = "", className = "", onClick,
+}: { src: string; alt?: string; className?: string; onClick: (src: string) => void }) {
   return (
-    <div
-      onClick={() => setOpen(!open)}
-      style={{
-        backgroundColor: "#F7F5F0",
-        border: `1px solid ${C.border}`,
-        borderRadius: 20,
-        padding: "28px 24px",
-        textAlign: "center",
-        cursor: "pointer",
-        transition: "box-shadow 0.2s, border-color 0.2s",
-        boxShadow: open ? "0 12px 30px rgba(61,59,91,0.12)" : "none",
-        borderColor: open ? C.purple : C.border,
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 10 }}>
-        <p style={{ ...inter(800, 14, "0.04em"), color: C.text, textTransform: "uppercase", margin: 0 }}>{title}</p>
-        <span style={{ color: C.purple, fontSize: 18, flexShrink: 0, transition: "transform 0.25s", transform: open ? "rotate(45deg)" : "none", display: "inline-block", lineHeight: 1 }}>+</span>
-      </div>
-      <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginBottom: open ? 14 : 0 }}>{teaser}</p>
-      {open && <div onClick={(e) => e.stopPropagation()}>{children}</div>}
+    <div className={`overflow-hidden cursor-zoom-in ${className}`} style={{ backgroundColor: C.lavender }} onClick={() => onClick(src)}>
+      <img src={src} alt={alt} className="h-full w-full object-cover block" />
     </div>
   );
 }
 
-// ── Gallery row ───────────────────────────────────────────────────────────────
-function GalleryRow({ images, height = 240, onImageClick }: { images: string[]; height?: number; onImageClick?: (src: string) => void }) {
+/** Horizontally scrollable row of images. */
+function GalleryRow({ images, onImageClick }: { images: string[]; onImageClick: (src: string) => void }) {
   return (
-    <div style={{ overflowX: "auto" }}>
-      <div style={{ display: "flex", gap: 12, padding: "0 24px", width: "max-content" }}>
+    <div className="overflow-x-auto">
+      <div className="flex gap-3 px-6 w-max">
         {images.map((src, i) => (
-          <div
-            key={i}
-            onClick={() => onImageClick?.(src)}
-            style={{ width: 178, height, borderRadius: 16, overflow: "hidden", backgroundColor: C.lavender, flexShrink: 0, cursor: onImageClick ? "zoom-in" : "default" }}
-          >
-            <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-          </div>
+          <ZoomImg key={i} src={src} onClick={onImageClick} className="w-[150px] h-[210px] sm:w-[178px] sm:h-[240px] rounded-2xl flex-shrink-0" />
         ))}
       </div>
     </div>
   );
 }
 
-// ── Main app ──────────────────────────────────────────────────────────────────
+/** Accordion-style card: click the header to reveal details. Used for FAQ, modules, case studies. */
+function ExpandCard({
+  title, teaser, children, align = "center",
+}: { title: string; teaser: string; children: React.ReactNode; align?: "center" | "left" }) {
+  const [open, setOpen] = useState(false);
+  const isCenter = align === "center";
+  return (
+    <div
+      onClick={() => setOpen(!open)}
+      className="cursor-pointer rounded-[20px] p-6 md:p-7 transition-shadow"
+      style={{
+        backgroundColor: C.card,
+        border: `1px solid ${open ? C.purple : C.border}`,
+        boxShadow: open ? "0 12px 30px rgba(61,59,91,0.12)" : "none",
+        textAlign: align,
+      }}
+    >
+      <div className={`flex items-center gap-2.5 mb-2.5 ${isCenter ? "justify-center" : "justify-between"}`}>
+        <p className="text-[13px] font-extrabold uppercase tracking-[0.05em]" style={{ color: C.text }}>{title}</p>
+        <span
+          className="inline-block flex-shrink-0 text-lg leading-none transition-transform"
+          style={{ color: C.purple, transform: open ? "rotate(45deg)" : "none" }}
+        >
+          +
+        </span>
+      </div>
+      <p className="text-[13px] leading-relaxed" style={{ color: C.textSub, marginBottom: open ? 14 : 0 }}>{teaser}</p>
+      {open && <div onClick={(e) => e.stopPropagation()}>{children}</div>}
+    </div>
+  );
+}
+
+// ═════════════════════════════════════════════════════════════════════════
+// APP
+// ═════════════════════════════════════════════════════════════════════════
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
@@ -226,127 +191,133 @@ export default function App() {
   const eyeRow = [imgHero, imgPortrait13, imgPortrait14, imgPortrait15, imgPortrait16, imgPortrait1];
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", color: C.text, backgroundColor: C.bg }}>
+    <div className="font-['Inter',sans-serif]" style={{ color: C.text, backgroundColor: C.bg }}>
       <Lightbox src={lightbox} onClose={() => setLightbox(null)} />
 
-      {/* ── NAV ────────────────────────────────────────────────────────────── */}
-      <nav style={{
-        backgroundColor: C.bg,
-        borderBottom: `1px solid ${C.borderWarm}`,
-        position: "sticky", top: 0, zIndex: 50,
-      }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ ...inter(800, 11, "0.18em"), textTransform: "uppercase", color: C.text }}>
+      {/* ═══ NAV ═══ */}
+      <nav className="sticky top-0 z-50" style={{ backgroundColor: C.bg, borderBottom: `1px solid ${C.borderWarm}` }}>
+        <div className="mx-auto flex h-[60px] max-w-[960px] items-center justify-between px-6">
+          <span className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: C.text }}>
             Let AI Pay Your Bills
           </span>
 
-          {/* desktop links pill */}
-          <div className="hidden md:flex" style={{ border: `1px solid ${C.border}`, borderRadius: 999, padding: "0 20px", height: 40, gap: 28, alignItems: "center" }}>
-            {["Testimonials", "Curriculum", "Success", "Pricing", "FAQ"].map(l => (
-              <a key={l} href={`#${l.toLowerCase()}`}
-                style={{ ...inter(600, 11, "0.1em"), color: C.text, textDecoration: "none", textTransform: "uppercase", opacity: 0.75, transition: "opacity 0.15s" }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "1")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "0.75")}>
+          <div className="hidden md:flex items-center gap-7 rounded-full px-5 h-10" style={{ border: `1px solid ${C.border}` }}>
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l}
+                href={`#${l.toLowerCase()}`}
+                className="text-[11px] font-semibold uppercase tracking-[0.1em] no-underline opacity-75 transition-opacity hover:opacity-100"
+                style={{ color: C.text }}
+              >
                 {l}
               </a>
             ))}
           </div>
 
-          <a href="#pricing" className="hidden md:inline-block"
-            style={{ ...pillBtn(C.text, C.white), padding: "10px 22px", fontSize: 11 }}>
-            Enroll
-          </a>
+          <PillButton href="#pricing" className="hidden md:inline-block !px-5 !py-2.5">Enroll</PillButton>
 
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}
-            style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+          <button className="md:hidden p-1" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
             <svg width="22" height="22" stroke={C.text} strokeWidth="1.8" fill="none" viewBox="0 0 24 24">
-              <path d="M3 6h18M3 12h18M3 18h18" strokeLinecap="round"/>
+              <path d="M3 6h18M3 12h18M3 18h18" strokeLinecap="round" />
             </svg>
           </button>
         </div>
 
         {menuOpen && (
-          <div style={{ backgroundColor: C.bg, borderTop: `1px solid ${C.borderWarm}`, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-            {["Testimonials", "Curriculum", "Success", "Pricing", "FAQ"].map(l => (
-              <a key={l} href={`#${l.toLowerCase()}`} onClick={() => setMenuOpen(false)}
-                style={{ ...inter(600, 12, "0.1em"), color: C.text, textDecoration: "none", textTransform: "uppercase" }}>{l}</a>
+          <div className="flex flex-col gap-4 px-6 py-5" style={{ backgroundColor: C.bg, borderTop: `1px solid ${C.borderWarm}` }}>
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l}
+                href={`#${l.toLowerCase()}`}
+                onClick={() => setMenuOpen(false)}
+                className="text-[12px] font-semibold uppercase tracking-[0.1em] no-underline"
+                style={{ color: C.text }}
+              >
+                {l}
+              </a>
             ))}
-            <a href="#pricing" style={{ ...pillBtn(C.purple, C.white), textAlign: "center" }}>Enroll</a>
+            <PillButton href="#pricing" variant="purple" className="text-center">Enroll</PillButton>
           </div>
         )}
       </nav>
 
-      {/* ── HERO ───────────────────────────────────────────────────────────── */}
-      <section style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)`, paddingBottom: 72 }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "40px 24px 0" }}>
-          <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", backgroundColor: C.lavender }}>
-            <img
+      {/* ═══ HERO ═══ */}
+      <section className="pb-16" style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)` }}>
+        <div className="mx-auto max-w-[960px] px-6 pt-10">
+          <div className="relative overflow-hidden rounded-3xl" style={{ backgroundColor: C.lavender }}>
+            <ZoomImg
               src={imgHero}
               alt="Let AI Pay Your Bills"
-              onClick={() => setLightbox(imgHero)}
-              className="h-[380px] md:h-[540px]"
-              style={{ width: "100%", objectFit: "cover", objectPosition: "center 25%", display: "block", cursor: "zoom-in" }}
+              onClick={setLightbox}
+              className="h-[380px] md:h-[540px] w-full"
             />
-            {/* overlay */}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)", pointerEvents: "none" }} />
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{ background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)" }}
+            />
 
-            {/* badge top-right */}
-            <div style={{ position: "absolute", top: 18, right: 18, backgroundColor: "rgba(61,59,91,0.55)", backdropFilter: "blur(10px)", borderRadius: 999, padding: "7px 16px", display: "flex", alignItems: "center", gap: 8 }}>
+            <div
+              className="absolute top-4 right-4 flex items-center gap-2 rounded-full px-4 py-1.5 backdrop-blur-md"
+              style={{ backgroundColor: "rgba(61,59,91,0.55)" }}
+            >
               <Stars />
-              <span style={{ ...inter(600, 10, "0.18em"), color: "#fff", textTransform: "uppercase" }}>400+ Students</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white">400+ Students</span>
             </div>
 
-            {/* text bottom-left */}
-            <div className="px-6 pb-8 md:px-11 md:pb-11" style={{ position: "absolute", bottom: 0, left: 0, right: 0, maxWidth: 520, pointerEvents: "none" }}>
-              <h1 className="text-[30px] md:text-[44px]" style={{ ...inter(800, 44, "-0.01em"), color: "#fff", margin: "0 0 12px", lineHeight: 1.1 }}>
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[520px] px-6 pb-8 md:px-11 md:pb-11">
+              <h1 className="mb-3 text-[32px] md:text-[44px] font-extrabold leading-[1.1] tracking-[-0.01em] text-white">
                 Let AI Pay Your Bills
               </h1>
-              <p style={{ ...inter(400, 14), color: "rgba(255,255,255,0.82)", lineHeight: 1.65, margin: "0 0 24px" }}>
-                Turn AI into your creative advantage. Learn how to build avatars, generate content, and create high-quality visuals that feel real, scalable, and ready to monetize.
+              <p className="mb-6 text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.82)" }}>
+                Turn AI into your creative advantage. Learn how to build avatars, generate content, and create
+                high-quality visuals that feel real, scalable, and ready to monetize.
               </p>
-              <a href="#pricing" style={{ ...pillBtn(C.bg, C.text), fontSize: 12, pointerEvents: "auto" }}>
+              <PillButton href="#pricing" variant="light" className="!text-[12px] pointer-events-auto">
                 Build Your Avatar
-              </a>
+              </PillButton>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── QUALIFICATION ──────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "72px 24px" }}>
-        <div style={{ maxWidth: 840, margin: "0 auto", textAlign: "center" }}>
+      {/* ═══ QUALIFICATION CHECK ═══ */}
+      <section className="px-6 py-16">
+        <div className="mx-auto max-w-[840px] text-center">
           <SectionLabel>Before you read ahead</SectionLabel>
-          <h2 style={{ ...inter(800, 28, "-0.01em"), color: C.text, margin: "0 0 44px", lineHeight: 1.25 }}>
+          <h2 className="mb-11 text-[26px] md:text-[28px] font-extrabold leading-[1.25] tracking-[-0.01em]">
             This course isn't for everyone.<br />Let's see if it's for you.
           </h2>
 
-          <div style={{ backgroundColor: C.white, border: `1px solid ${C.borderWarm}`, borderRadius: 24, overflow: "hidden", textAlign: "left" }}>
-            {/* header */}
-            <div style={{ padding: "28px 32px", borderBottom: `1px solid ${C.borderWarm}` }}>
-              <p style={{ ...inter(700, 13, "0.08em"), color: C.text, margin: "0 0 6px", textTransform: "uppercase" }}>Qualification Check</p>
-              <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.6, maxWidth: 500 }}>
-                This course is designed for creators, entrepreneurs, and brands who want to turn AI into a real creative advantage.
+          <div className="overflow-hidden rounded-3xl text-left" style={{ backgroundColor: C.white, border: `1px solid ${C.borderWarm}` }}>
+            <div className="p-7 md:p-8" style={{ borderBottom: `1px solid ${C.borderWarm}` }}>
+              <p className="mb-1.5 text-[13px] font-bold uppercase tracking-[0.08em]">Qualification Check</p>
+              <p className="max-w-[500px] text-[13px] leading-relaxed" style={{ color: C.textSub }}>
+                This course is designed for creators, entrepreneurs, and brands who want to turn AI into a real
+                creative advantage.
               </p>
             </div>
 
-            {/* two columns */}
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="border-b md:border-b-0 md:border-r" style={{ padding: "28px 32px", borderColor: C.borderWarm }}>
-                <p style={{ ...inter(600, 10, "0.18em"), color: C.textSub, textTransform: "uppercase", marginBottom: 20 }}>This is not for you if:</p>
+              <div className="border-b md:border-b-0 md:border-r p-7 md:p-8" style={{ borderColor: C.borderWarm }}>
+                <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: C.textSub }}>
+                  This is not for you if:
+                </p>
                 {[
                   "You're only curious about AI but don't plan to actually create anything",
                   "You're looking for a \"push one button and get rich\" shortcut",
                   "You're not willing to test, experiment, and apply what you learn",
                   "You expect results without putting the workflow into practice",
                 ].map((t, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "flex-start" }}>
-                    <span style={{ color: "#C07070", fontWeight: 700, fontSize: 13, flexShrink: 0, marginTop: 2 }}>✕</span>
-                    <span style={{ ...inter(400, 13), color: C.text, lineHeight: 1.55, opacity: 0.85 }}>{t}</span>
+                  <div key={i} className="mb-4 flex items-start gap-3">
+                    <span className="mt-0.5 flex-shrink-0 text-[13px] font-bold" style={{ color: "#C07070" }}>✕</span>
+                    <span className="text-[13px] leading-relaxed opacity-85">{t}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ padding: "28px 32px" }}>
-                <p style={{ ...inter(600, 10, "0.18em"), color: C.textSub, textTransform: "uppercase", marginBottom: 20 }}>This is for you if you are:</p>
+              <div className="p-7 md:p-8">
+                <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: C.textSub }}>
+                  This is for you if you are:
+                </p>
                 {[
                   "A creator who wants to build an AI influencer or content page",
                   "Someone who wants to create UGC-style content without filming yourself",
@@ -354,17 +325,16 @@ export default function App() {
                   "An entrepreneur who wants to offer AI content creation as a service",
                   "Someone who understands that learning AI creation now is a huge advantage",
                 ].map((t, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "flex-start" }}>
-                    <span style={{ color: C.purple, fontWeight: 700, fontSize: 13, flexShrink: 0, marginTop: 2 }}>✓</span>
-                    <span style={{ ...inter(400, 13), color: C.text, lineHeight: 1.55, opacity: 0.85 }}>{t}</span>
+                  <div key={i} className="mb-4 flex items-start gap-3">
+                    <span className="mt-0.5 flex-shrink-0 text-[13px] font-bold" style={{ color: C.purple }}>✓</span>
+                    <span className="text-[13px] leading-relaxed opacity-85">{t}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* footer */}
-            <div style={{ borderTop: `1px solid ${C.borderWarm}`, backgroundColor: "#F5F2ED", padding: "18px 32px", textAlign: "center" }}>
-              <p style={{ ...inter(700, 13, "0.05em"), color: C.text, textTransform: "uppercase" }}>
+            <div className="p-5 text-center" style={{ borderTop: `1px solid ${C.borderWarm}`, backgroundColor: "#F5F2ED" }}>
+              <p className="text-[13px] font-bold uppercase tracking-[0.05em]">
                 Yes, this sounds like me — show me what's inside
               </p>
             </div>
@@ -372,24 +342,24 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── WELCOME ────────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "0 24px 72px" }}>
-        <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 22, "-0.01em"), color: C.text, margin: "0 0 12px", lineHeight: 1.35 }}>
+      {/* ═══ WELCOME ═══ */}
+      <section className="px-6 pb-16">
+        <div className="mx-auto max-w-[820px] text-center">
+          <h2 className="mb-3 text-[20px] md:text-[22px] font-extrabold leading-[1.35] tracking-[-0.01em]">
             Welcome to the new era of content creation.<br />
             AI avatars, AI campaigns, and content on demand.
           </h2>
-          <p style={{ ...inter(500, 10, "0.18em"), color: C.textSub, textTransform: "uppercase", marginBottom: 32 }}>
+          <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: C.textSub }}>
             Think of it as the power of a full production house: automated and run from your laptop.
           </p>
-          <div style={{ backgroundColor: C.lav2, border: `1px solid ${C.border}`, borderRadius: 20, padding: "36px 48px", maxWidth: 660, margin: "0 auto" }}>
+          <div className="mx-auto max-w-[660px] rounded-[20px] px-8 py-9 md:px-12" style={{ backgroundColor: C.lav2, border: `1px solid ${C.border}` }}>
             {[
               "Create realistic AI avatars and content without filming yourself",
               "Generate product images, aesthetic scenes, and full campaigns",
               "Produce scroll-stopping visuals in minutes instead of days",
               "Perfect for creators, brands, and entrepreneurs who want to move faster with AI",
-            ].map((t, i) => (
-              <p key={i} style={{ ...inter(400, 14), color: C.text, lineHeight: 1.7, marginBottom: i < 3 ? 16 : 0 }}>
+            ].map((t, i, arr) => (
+              <p key={i} className="text-[14px] leading-relaxed text-left" style={{ marginBottom: i < arr.length - 1 ? 16 : 0 }}>
                 → {t}
               </p>
             ))}
@@ -397,85 +367,82 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── PROBLEMS ───────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "0 24px 56px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 18, "-0.01em"), color: C.text, margin: "0 0 8px", lineHeight: 1.45 }}>
+      {/* ═══ PROBLEMS ═══ */}
+      <section className="px-6 pb-14">
+        <div className="mx-auto max-w-[900px] text-center">
+          <h2 className="mb-2 text-[17px] md:text-[18px] font-extrabold leading-[1.45] tracking-[-0.01em]">
             If it were easy, everyone would already be creating amazing AI content.<br />
             But the truth is…
           </h2>
-          <p style={{ ...inter(700, 13, "0.06em"), color: C.text, textTransform: "uppercase", marginBottom: 36 }}>
+          <p className="mb-9 text-[13px] font-bold uppercase tracking-[0.06em]">
             Most people trying AI run into the same problems.
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 14, marginBottom: 36 }}>
+          <div className="mb-9 grid grid-cols-2 md:grid-cols-4 gap-3.5">
             {[
-              { img: imgHero,       label: "Fake-looking results",   fix: "Our Character DNA system" },
-              { img: imgPortrait1,  label: "Bad prompting",          fix: "Our curated prompt library" },
-              { img: imgPortrait2,  label: "No consistency",         fix: "The Avatar Foundation method" },
-              { img: imgPortrait3,  label: "No clear workflow",      fix: "Our step-by-step roadmap" },
+              { img: imgHero, label: "Fake-looking results", fix: "Our Character DNA system" },
+              { img: imgPortrait1, label: "Bad prompting", fix: "Our curated prompt library" },
+              { img: imgPortrait2, label: "No consistency", fix: "The Avatar Foundation method" },
+              { img: imgPortrait3, label: "No clear workflow", fix: "Our step-by-step roadmap" },
             ].map((c, i) => (
               <div key={i}>
-                <div onClick={() => setLightbox(c.img)} style={{ position: "relative", borderRadius: 16, overflow: "hidden", backgroundColor: C.lavender, marginBottom: 10, cursor: "zoom-in" }}>
-                  <img src={c.img} alt={c.label} style={{ width: "100%", height: 172, objectFit: "cover", display: "block" }} />
-                  <div style={{ position: "absolute", top: 8, left: 8 }}>
-                    <span style={{ backgroundColor: "rgba(255,255,255,0.9)", borderRadius: 999, padding: "3px 10px", fontSize: 9, color: C.text, fontWeight: 600 }}>
+                <div className="relative mb-2.5 overflow-hidden rounded-2xl cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(c.img)}>
+                  <img src={c.img} alt={c.label} className="h-[150px] sm:h-[172px] w-full object-cover block" />
+                  <div className="absolute top-2 left-2">
+                    <span className="rounded-full px-2.5 py-1 text-[8px] sm:text-[9px] font-semibold" style={{ backgroundColor: "rgba(255,255,255,0.9)" }}>
                       Plastic skin, weird hands
                     </span>
                   </div>
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 12px 12px", background: "linear-gradient(to top, rgba(30,25,50,0.7) 0%, transparent 100%)" }}>
-                    <p style={{ ...inter(700, 10.5, "0.08em"), color: "#fff", textTransform: "uppercase" }}>{c.label}</p>
+                  <div
+                    className="absolute bottom-0 left-0 right-0 px-3 pb-3 pt-7"
+                    style={{ background: "linear-gradient(to top, rgba(30,25,50,0.7) 0%, transparent 100%)" }}
+                  >
+                    <p className="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-[0.08em] text-white">{c.label}</p>
                   </div>
                 </div>
-                <div style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, borderRadius: 12, padding: "10px 12px", textAlign: "center" }}>
-                  <p style={{ ...inter(600, 9.5, "0.12em"), color: C.textSub, textTransform: "uppercase", marginBottom: 4 }}>Fixed with</p>
-                  <p style={{ ...inter(400, 11.5), color: C.text, lineHeight: 1.4 }}>{c.fix}</p>
+                <div className="rounded-xl px-3 py-2.5 text-center" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+                  <p className="mb-1 text-[9px] sm:text-[9.5px] font-semibold uppercase tracking-[0.12em]" style={{ color: C.textSub }}>Fixed with</p>
+                  <p className="text-[10.5px] sm:text-[11.5px] leading-tight">{c.fix}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.75, marginBottom: 6 }}>
+          <p className="mb-1.5 text-[13px] leading-loose" style={{ color: C.textSub }}>
             The real problem isn't the tools.<br />
             It's the lack of a clear system that shows you how everything connects.
           </p>
-          <p style={{ ...inter(600, 13), color: C.text, marginBottom: 40 }}>
-            That's where this course comes in.
-          </p>
-
+          <p className="mb-10 text-[13px] font-semibold">That's where this course comes in.</p>
           <div style={{ borderTop: `1px dashed ${C.border}` }} />
         </div>
       </section>
 
-      {/* ── WORKFLOW GALLERY ────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "56px 24px 28px", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 38, "-0.02em"), color: C.text, marginBottom: 10 }}>
-            Master the AI Content Workflow
-          </h2>
-          <p style={{ ...inter(700, 11, "0.1em"), color: C.text, textTransform: "uppercase", lineHeight: 1.6, marginBottom: 36 }}>
-            These are the types of content and visuals you'll learn<br />how to create inside the course.
+      {/* ═══ WORKFLOW GALLERY ═══ */}
+      <section>
+        <div className="mx-auto max-w-[900px] px-6 pb-7 pt-14 text-center">
+          <h2 className="mb-2.5 text-[30px] md:text-[38px] font-extrabold tracking-[-0.02em]">Master the AI Content Workflow</h2>
+          <p className="mb-9 text-[11px] font-bold uppercase leading-relaxed tracking-[0.1em]">
+            These are the types of content and visuals you'll learn<br className="hidden sm:block" /> how to create inside the course.
           </p>
         </div>
         <GalleryRow images={row1} onImageClick={setLightbox} />
-        <div style={{ marginBottom: 12 }} />
+        <div className="mb-3" />
         <GalleryRow images={row2} onImageClick={setLightbox} />
-        <div style={{ marginBottom: 60 }} />
+        <div className="mb-14" />
       </section>
 
-      {/* ── CURRICULUM ─────────────────────────────────────────────────────── */}
-      <section id="curriculum" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 35%, ${C.bg} 100%)`, padding: "72px 24px 64px" }}>
-        <div style={{ maxWidth: 740, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 28, "-0.01em"), color: C.text, margin: "0 0 14px", lineHeight: 1.3 }}>
+      {/* ═══ CURRICULUM ═══ */}
+      <section id="curriculum" className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 35%, ${C.bg} 100%)` }}>
+        <div className="mx-auto max-w-[740px] text-center">
+          <h2 className="mb-3.5 text-[26px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">
             Master the AI-powered<br />Creative Workflow
           </h2>
-          <p style={{ ...inter(500, 10, "0.18em"), color: C.textSub, textTransform: "uppercase", lineHeight: 1.7, maxWidth: 560, margin: "0 auto 14px" }}>
-            The complete system for professionals to deliver high-end creative AI campaigns, build industry-ready skills, and stay ahead of the future of creative work.
+          <p className="mx-auto mb-3.5 max-w-[560px] text-[10px] font-medium uppercase leading-loose tracking-[0.18em]" style={{ color: C.textSub }}>
+            The complete system for professionals to deliver high-end creative AI campaigns, build industry-ready
+            skills, and stay ahead of the future of creative work.
           </p>
-          <p style={{ ...inter(700, 12, "0.1em"), color: C.text, textTransform: "uppercase", marginBottom: 28 }}>
-            Inside our course, you'll learn how to:
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <p className="mb-7 text-[12px] font-bold uppercase tracking-[0.1em]">Inside our course, you'll learn how to:</p>
+          <div className="flex flex-col gap-2.5">
             {[
               <span>Create your own realistic <strong>AI avatars or AI twin</strong></span>,
               <span>Generate consistent images with <strong>professional-level realism</strong></span>,
@@ -483,268 +450,268 @@ export default function App() {
               <span>Generate <strong>product images</strong> and <strong>campaign visuals</strong></span>,
               <span>Build a scalable <strong>AI content creation system</strong></span>,
             ].map((content, i) => (
-              <div key={i} style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: "16px 24px", textAlign: "left" }}>
-                <p style={{ ...inter(400, 14), color: C.text, margin: 0 }}>{content}</p>
+              <div key={i} className="rounded-2xl px-6 py-4 text-left text-[14px]" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
+                {content}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── VISUAL ROADMAP ──────────────────────────────────────────────────── */}
-      <section style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)`, padding: "64px 24px 72px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 20, "0.04em"), color: C.text, marginBottom: 8, textTransform: "uppercase" }}>Visual Roadmap</h2>
-          <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 48 }}>
+      {/* ═══ VISUAL ROADMAP ═══ */}
+      <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)` }}>
+        <div className="mx-auto max-w-[900px] text-center">
+          <h2 className="mb-2 text-[19px] md:text-[20px] font-extrabold uppercase tracking-[0.04em]">Visual Roadmap</h2>
+          <p className="mb-12 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>
             Your step-by-step path to building your AI creation system
           </p>
 
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-start", gap: 6 }}>
+          <div className="flex flex-wrap items-start justify-center gap-1.5">
             {[
-              { emoji: "🔍", label: "Define",    sub: "Your Avatar Goal" },
-              { emoji: "✏️", label: "Design",   sub: "Your Character DNA" },
+              { emoji: "🔍", label: "Define", sub: "Your Avatar Goal" },
+              { emoji: "✏️", label: "Design", sub: "Your Character DNA" },
               { emoji: "🧑", label: "Generate", sub: "Your Base Images" },
-              { emoji: "🌐", label: "Expand",   sub: "Scenes & Variations" },
-              { emoji: "▶️", label: "Animate",  sub: "Images Into Video" },
-              { emoji: "💰", label: "Scale",    sub: "A Profitable Business" },
-            ].map((step, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <div style={{ textAlign: "center", width: 88 }}>
-                  <div style={{ width: 64, height: 64, borderRadius: 18, backgroundColor: C.lav2, border: `1.5px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, margin: "0 auto 8px" }}>
+              { emoji: "🌐", label: "Expand", sub: "Scenes & Variations" },
+              { emoji: "▶️", label: "Animate", sub: "Images Into Video" },
+              { emoji: "💰", label: "Scale", sub: "A Profitable Business" },
+            ].map((step, i, arr) => (
+              <div key={i} className="flex items-center gap-1.5">
+                <div className="w-[84px] sm:w-[88px] text-center">
+                  <div
+                    className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-[18px] text-2xl"
+                    style={{ backgroundColor: C.lav2, border: `1.5px solid ${C.border}` }}
+                  >
                     {step.emoji}
                   </div>
-                  <p style={{ ...inter(700, 10.5, "0.06em"), color: C.text, marginBottom: 3, textTransform: "uppercase" }}>{step.label}</p>
-                  <p style={{ ...inter(400, 10), color: C.textSub, lineHeight: 1.35 }}>{step.sub}</p>
+                  <p className="mb-0.5 text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.06em]">{step.label}</p>
+                  <p className="text-[9.5px] sm:text-[10px] leading-tight" style={{ color: C.textSub }}>{step.sub}</p>
                 </div>
-                {i < 5 && <span style={{ color: C.purple, fontSize: 18, marginBottom: 26, flexShrink: 0 }}>→</span>}
+                {i < arr.length - 1 && <span className="mb-6 flex-shrink-0 text-lg" style={{ color: C.purple }}>→</span>}
               </div>
             ))}
           </div>
 
-          <div style={{ marginTop: 44 }}>
-            <a href="#pricing" style={pillBtn(C.purple, C.white)}>Join the Course</a>
-          </div>
+          <PillButton href="#pricing" variant="purple" className="mt-11">Join the Course</PillButton>
         </div>
       </section>
 
-      {/* ── 3 MODULES ───────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "72px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+      {/* ═══ 3 MODULES ═══ */}
+      <section className="px-6 py-16">
+        <div className="mx-auto max-w-[900px] text-center">
           <SectionLabel>How can you create AI campaigns like this? Introducing…</SectionLabel>
-          <h2 style={{ ...inter(800, 26, "-0.01em"), color: C.text, margin: "0 0 14px" }}>Let AI Pay Your Bills</h2>
-          <p style={{ ...inter(400, 14), color: C.textSub, lineHeight: 1.7, maxWidth: 520, margin: "0 auto 44px" }}>
-            A complete workflow for creating realistic AI avatars, generating content, and turning it into videos, posts, and campaigns.
+          <h2 className="mb-3.5 text-[24px] md:text-[26px] font-extrabold tracking-[-0.01em]">Let AI Pay Your Bills</h2>
+          <p className="mx-auto mb-11 max-w-[520px] text-[14px] leading-loose" style={{ color: C.textSub }}>
+            A complete workflow for creating realistic AI avatars, generating content, and turning it into videos,
+            posts, and campaigns.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 16 }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
                 title: "Avatar Foundation",
-                intro: "Build a character that stays consistent across every image and video.",
+                teaser: "Build a character that stays consistent across every image and video.",
                 bullets: ["Define your avatar goal (influencer, UGC, brand content, AI twin)", "Create your Character DNA", "Generate your first realistic base images"],
                 outro: "Once this foundation is set, your avatar becomes reusable across unlimited content.",
               },
               {
                 title: "Image Generation",
-                intro: "Turn your avatar into a full creative system.",
+                teaser: "Turn your avatar into a full creative system.",
                 bullets: ["Generate different scenes and environments", "Create lifestyle, aesthetic, and cinematic visuals", "Produce AI product images and campaign shots", "Add realism so your content looks natural"],
-                outro: null,
-                outroJsx: <span>This is where your avatar starts becoming <strong>real content.</strong></span>,
+                outro: "This is where your avatar starts becoming real content.",
               },
               {
                 title: "Video & Content Creation",
-                intro: "Bring your avatar to life and turn everything into publishable posts.",
+                teaser: "Bring your avatar to life and turn everything into publishable posts.",
                 bullets: ["Animate images into talking clips and scenes", "Create AI B-roll and aesthetic video shots", "Add voice and movement", "Assemble everything into social media content"],
                 outro: "At the end of this step, you'll have a complete AI post ready to publish.",
               },
             ].map((mod, i) => (
-              <ExpandCard key={i} title={mod.title} teaser={mod.intro}>
-                <p style={{ ...inter(600, 10, "0.14em"), color: C.textSub, textTransform: "uppercase", marginBottom: 12 }}>Inside this step you'll learn how to:</p>
-                {mod.bullets.map((b, j) => (
-                  <p key={j} style={{ ...inter(400, 12), color: C.text, lineHeight: 1.5, marginBottom: 8, textAlign: "left" }}>• {b}</p>
-                ))}
-                <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65, marginTop: 14 }}>
-                  {mod.outroJsx ?? mod.outro}
+              <ExpandCard key={i} title={mod.title} teaser={mod.teaser}>
+                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: C.textSub }}>
+                  Inside this step you'll learn how to:
                 </p>
+                {mod.bullets.map((b, j) => (
+                  <p key={j} className="mb-2 text-left text-[12px] leading-relaxed">• {b}</p>
+                ))}
+                <p className="mt-3.5 text-[13px] leading-relaxed" style={{ color: C.textSub }}>{mod.outro}</p>
               </ExpandCard>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ────────────────────────────────────────────────────── */}
-      <section id="testimonials" style={{ backgroundColor: C.bg, padding: "0 24px 72px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 22, "-0.01em"), color: C.text, margin: "0 0 16px", lineHeight: 1.35 }}>
+      {/* ═══ TESTIMONIALS ═══ */}
+      <section id="testimonials" className="px-6 pb-16">
+        <div className="mx-auto max-w-[900px] text-center">
+          <h2 className="mb-4 text-[20px] md:text-[22px] font-extrabold leading-[1.35] tracking-[-0.01em]">
             Trusted by creators, entrepreneurs, and brands<br />learning AI content creation.
           </h2>
-          <div style={{ marginBottom: 6 }}><Stars /></div>
-          <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 36 }}>
+          <div className="mb-1.5"><Stars /></div>
+          <p className="mb-9 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>
             Rated 5 stars by students
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
+          <div className="mb-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { name: "Sofia M.", text: "I had zero experience with AI and now I have a full avatar with a consistent look across dozens of images. The prompting system alone is worth it." },
               { name: "Lena K.", text: "I'm a UGC creator and this completely changed how I work. I can now offer AI content as an add-on service and it's become my most in-demand offering." },
               { name: "Marta R.", text: "The Avatar Foundation module is insane. I built my character DNA in one afternoon and started generating on-brand visuals the same day." },
             ].map((t, i) => (
               <Card key={i}>
-                <div style={{ marginBottom: 10 }}><Stars /></div>
-                <p style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, marginBottom: 12, opacity: 0.85 }}>"{t.text}"</p>
-                <p style={{ ...inter(600, 11, "0.08em"), color: C.purple }}>— {t.name}</p>
+                <div className="mb-2.5"><Stars /></div>
+                <p className="mb-3 text-[13px] leading-relaxed opacity-85">"{t.text}"</p>
+                <p className="text-[11px] font-semibold tracking-[0.08em]" style={{ color: C.purple }}>— {t.name}</p>
               </Card>
             ))}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 12, maxWidth: 600, margin: "0 auto" }}>
+          <div className="mx-auto grid max-w-[600px] grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { name: "Chiara B.", text: "As a brand owner I was spending thousands on photographers. Now I produce my own campaign visuals with AI. The quality is genuinely impressive." },
               { name: "Jess T.", text: "I tried three other AI courses and none of them showed me what this one does. The roadmap makes everything click — it's a proper system, not just tips." },
             ].map((t, i) => (
               <Card key={i}>
-                <div style={{ marginBottom: 10 }}><Stars /></div>
-                <p style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, marginBottom: 12, opacity: 0.85 }}>"{t.text}"</p>
-                <p style={{ ...inter(600, 11, "0.08em"), color: C.purple }}>— {t.name}</p>
+                <div className="mb-2.5"><Stars /></div>
+                <p className="mb-3 text-[13px] leading-relaxed opacity-85">"{t.text}"</p>
+                <p className="text-[11px] font-semibold tracking-[0.08em]" style={{ color: C.purple }}>— {t.name}</p>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── STUDENT WORK ────────────────────────────────────────────────────── */}
+      {/* ═══ STUDENT WORK ═══ */}
       <section id="success" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lavender} 18%, ${C.lavender} 82%, ${C.bg} 100%)` }}>
-        <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", textAlign: "center", padding: "52px 24px 20px" }}>
+        <p className="px-6 pb-5 pt-14 text-center text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>
           Take a look at our students' work:
         </p>
         <GalleryRow images={eyeRow} onImageClick={setLightbox} />
-        <div style={{ padding: "48px 24px 20px", textAlign: "center" }}>
-          <p style={{ ...inter(700, 13, "0.08em"), color: C.text, textTransform: "uppercase", marginBottom: 6 }}>
+        <div className="px-6 pb-5 pt-12 text-center">
+          <p className="mb-1.5 text-[13px] font-bold uppercase tracking-[0.08em]">
             Our students are already learning how to create content with AI
           </p>
-          <p style={{ ...inter(500, 10, "0.18em"), color: C.textSub, textTransform: "uppercase", marginBottom: 32 }}>
+          <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: C.textSub }}>
             Building avatars, generating visuals, and turning AI into real creative workflows.
           </p>
-          <a href="#pricing" style={pillBtn(C.purple, C.white)}>Enroll Now</a>
+          <PillButton href="#pricing" variant="purple">Enroll Now</PillButton>
         </div>
       </section>
 
-      {/* ── FUTURE SECTION ──────────────────────────────────────────────────── */}
-      <section style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 40%, ${C.bg} 100%)`, padding: "72px 24px" }}>
-        <div style={{ maxWidth: 840, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 26, "-0.01em"), color: C.purple, margin: "0 0 18px", lineHeight: 1.35 }}>
+      {/* ═══ FUTURE / COMPARISON ═══ */}
+      <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 40%, ${C.bg} 100%)` }}>
+        <div className="mx-auto max-w-[840px] text-center">
+          <h2 className="mb-4 text-[24px] md:text-[26px] font-extrabold leading-[1.35] tracking-[-0.01em]" style={{ color: C.purple }}>
             The future of content creation is already here.<br />
             The question is: will you be creating it?
           </h2>
-          <p style={{ ...inter(400, 14), color: C.text, lineHeight: 1.75, maxWidth: 560, margin: "0 auto 10px", opacity: 0.85 }}>
-            This course gives you the system to create realistic AI avatars, generate content, and turn it into real posts, visuals, and campaigns — all from your laptop.
+          <p className="mx-auto mb-2.5 max-w-[560px] text-[14px] leading-loose opacity-85">
+            This course gives you the system to create realistic AI avatars, generate content, and turn it into real
+            posts, visuals, and campaigns — all from your laptop.
           </p>
-          <p style={{ ...inter(400, 14), color: C.text, lineHeight: 1.75, maxWidth: 540, margin: "0 auto 40px", opacity: 0.85 }}>
+          <p className="mx-auto mb-10 max-w-[540px] text-[14px] leading-loose opacity-85">
             Instead of watching the AI revolution from the sidelines, you'll learn how to actually use it.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr]" style={{ gap: 0, alignItems: "center", maxWidth: 800, margin: "0 auto 64px" }}>
-            <Card style={{ textAlign: "center" }}>
-              <p style={{ ...inter(700, 11, "0.1em"), color: C.textSub, textTransform: "uppercase", marginBottom: 20 }}>Without this course</p>
+          <div className="mx-auto mb-16 grid max-w-[800px] grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-0">
+            <Card>
+              <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: C.textSub }}>Without this course</p>
               {["Random prompting and inconsistent results", "AI images that look fake or unusable", "No consistent avatar or character", "No idea how to turn images into real content", "Constantly testing tools without a clear workflow"].map((t, i) => (
-                <p key={i} style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, marginBottom: 12, opacity: 0.82 }}>• {t}</p>
+                <p key={i} className="mb-3 text-[13px] leading-relaxed opacity-80">• {t}</p>
               ))}
             </Card>
-            <div className="rotate-90 md:rotate-0" style={{ padding: "12px 18px", color: C.purple, fontSize: 22, flexShrink: 0, marginBottom: 20, textAlign: "center" }}>→</div>
-            <Card style={{ textAlign: "center", borderColor: C.purple }}>
-              <p style={{ ...inter(700, 11, "0.1em"), color: C.purple, textTransform: "uppercase", marginBottom: 20 }}>With this course</p>
+            <div className="rotate-90 md:rotate-0 py-2 text-center text-2xl md:px-4" style={{ color: C.purple }}>→</div>
+            <Card accent>
+              <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: C.purple }}>With this course</p>
               {["A clear system for creating realistic AI avatars", "Consistent characters you can reuse across content", "The ability to generate images, videos, and scenes", "A workflow to turn everything into posts and campaigns", "A skill that can be used for creators, brands, or client work"].map((t, i) => (
-                <p key={i} style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, marginBottom: 12, opacity: 0.82 }}>• {t}</p>
+                <p key={i} className="mb-3 text-[13px] leading-relaxed opacity-80">• {t}</p>
               ))}
             </Card>
           </div>
 
-          {/* Market Reality */}
-          <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 28 }}>Market Reality</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 14 }}>
+          <p className="mb-7 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Market Reality</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             {[
               { pct: "91%", bold: "Of brands say visual content is their top marketing priority", desc: "But producing that content consistently is still expensive and time-consuming." },
               { pct: "70%", bold: "Of marketers say they need more content than ever before", desc: "Yet most teams still struggle to keep up with demand." },
               { pct: "60%", bold: "Of small brands say content production is their biggest marketing bottleneck.", desc: "This is your chance!" },
             ].map((s, i) => (
-              <Card key={i} style={{ textAlign: "center" }}>
-                <p style={{ ...inter(800, 42, "-0.02em"), color: C.text, marginBottom: 10 }}>{s.pct}</p>
-                <p style={{ ...inter(700, 12), color: C.text, lineHeight: 1.5, marginBottom: 8 }}>{s.bold}</p>
-                <p style={{ ...inter(400, 12), color: C.textSub, lineHeight: 1.6 }}>{s.desc}</p>
+              <Card key={i}>
+                <p className="mb-2.5 text-[36px] md:text-[42px] font-extrabold tracking-[-0.02em]">{s.pct}</p>
+                <p className="mb-2 text-[12px] font-bold leading-snug">{s.bold}</p>
+                <p className="text-[12px] leading-relaxed" style={{ color: C.textSub }}>{s.desc}</p>
               </Card>
             ))}
           </div>
 
-          <div style={{ marginTop: 44 }}>
-            <ArrowDown />
-            <h3 style={{ ...inter(800, 16, "0.04em"), color: C.text, lineHeight: 1.5, textTransform: "uppercase", marginTop: 12 }}>
-              This is exactly why learning how to create content<br />with AI is becoming such a valuable skill.
+          <div className="mt-11">
+            <ArrowDown className="mx-auto" />
+            <h3 className="mt-3 text-[15px] md:text-[16px] font-extrabold uppercase leading-relaxed tracking-[0.04em]">
+              This is exactly why learning how to create content<br className="hidden sm:block" />with AI is becoming such a valuable skill.
             </h3>
           </div>
         </div>
       </section>
 
-      {/* ── AHEAD OF THE GAME ───────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "72px 24px" }}>
-        <div style={{ maxWidth: 840, margin: "0 auto", textAlign: "center" }}>
-          <ArrowDown />
-          <h2 style={{ ...inter(800, 22, "-0.01em"), color: C.text, margin: "12px 0 36px", textTransform: "uppercase" }}>
+      {/* ═══ AHEAD OF THE GAME ═══ */}
+      <section className="px-6 py-16">
+        <div className="mx-auto max-w-[840px] text-center">
+          <ArrowDown className="mx-auto" />
+          <h2 className="my-3 mb-9 text-[20px] md:text-[22px] font-extrabold uppercase tracking-[-0.01em]">
             This is your chance to be ahead of the game
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3" style={{ gap: 12, maxWidth: 680, margin: "0 auto 32px" }}>
+          <div className="mx-auto mb-8 grid max-w-[680px] grid-cols-2 sm:grid-cols-3 gap-3">
             {[imgPortrait4, imgPortrait5, imgPortrait6].map((src, i) => (
-              <div key={i} onClick={() => setLightbox(src)} style={{ borderRadius: 18, overflow: "hidden", backgroundColor: C.lavender, cursor: "zoom-in" }}>
-                <img src={src} alt="" style={{ width: "100%", height: 220, objectFit: "cover", display: "block" }} />
-              </div>
+              <ZoomImg key={i} src={src} onClick={setLightbox} className="h-[170px] sm:h-[220px] rounded-2xl" />
             ))}
           </div>
-          <p style={{ ...inter(700, 13, "0.04em"), color: C.text, lineHeight: 1.6, maxWidth: 520, margin: "0 auto 56px", textTransform: "uppercase" }}>
+          <p className="mx-auto mb-14 max-w-[520px] text-[13px] font-bold uppercase leading-relaxed">
             Once the system is built, creating visuals like this becomes fast, scalable, and repeatable.
           </p>
 
-          <p style={{ ...inter(800, 18, "0.08em"), color: C.text, textTransform: "uppercase", marginBottom: 24 }}>Case Studies</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 14, marginBottom: 14 }}>
+          <p className="mb-6 text-[17px] md:text-[18px] font-extrabold uppercase tracking-[0.08em]">Case Studies</p>
+          <div className="mb-3.5 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             {[
               { name: "Sarah — UGC Creator", teaser: "Tripled her client roster in 60 days.", result: "Tripled her client roster in 60 days by replacing all filming with AI-generated content. Now produces 20+ pieces per week." },
               { name: "Lumé Cosmetics", teaser: "Saved €4,200 in production costs.", result: "Replaced monthly photoshoots with AI campaign visuals. Saved €4,200 in production costs in the first month." },
               { name: "Marco — Freelancer", teaser: "Landed 2 retainer clients in 45 days.", result: "Added AI content services to his agency. Landed 2 retainer clients at €1,500/month each within 45 days of completing the course." },
             ].map((cs, i) => (
-              <ExpandCard key={i} title={cs.name} teaser={cs.teaser}>
-                <p style={{ ...inter(400, 13), color: C.text, lineHeight: 1.65, opacity: 0.82, textAlign: "left" }}>{cs.result}</p>
+              <ExpandCard key={i} title={cs.name} teaser={cs.teaser} align="left">
+                <p className="text-[13px] leading-relaxed opacity-80">{cs.result}</p>
               </ExpandCard>
             ))}
           </div>
-          <p style={{ ...inter(400, 12), color: C.textSub, lineHeight: 1.7 }}>
-            These are examples of projects created using the techniques taught in the course.<br />Results will vary depending on how you apply the system.
+          <p className="text-[12px] leading-loose" style={{ color: C.textSub }}>
+            These are examples of projects created using the techniques taught in the course.<br />
+            Results will vary depending on how you apply the system.
           </p>
         </div>
       </section>
 
-      {/* ── WHY DEMAND ──────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "0 24px 72px" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ ...inter(800, 28, "-0.01em"), color: C.text, margin: "0 0 14px", lineHeight: 1.3 }}>
+      {/* ═══ WHY DEMAND ═══ */}
+      <section className="px-6 pb-16">
+        <div className="mx-auto max-w-[700px] text-center">
+          <h2 className="mb-3.5 text-[26px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">
             Why is demand for AI content exploding?
           </h2>
-          <p style={{ ...inter(400, 14), color: C.textSub, lineHeight: 1.7, marginBottom: 24 }}>
+          <p className="mb-6 text-[14px] leading-relaxed" style={{ color: C.textSub }}>
             Because brands need more content, faster — without the cost of traditional production.
           </p>
-          <div style={{ backgroundColor: C.lav2, border: `1.5px solid ${C.border}`, borderRadius: 18, padding: "24px 36px", marginBottom: 18 }}>
-            <p style={{ ...inter(700, 13, "0.04em"), color: C.text, lineHeight: 1.65, textTransform: "uppercase" }}>
-              AI-powered production reduces costs, increases speed,<br />and allows brands to scale campaigns instantly.
+          <div className="mb-4.5 rounded-2xl px-7 py-6 md:px-9" style={{ backgroundColor: C.lav2, border: `1.5px solid ${C.border}` }}>
+            <p className="text-[13px] font-bold uppercase leading-relaxed">
+              AI-powered production reduces costs, increases speed,<br className="hidden sm:block" />and allows brands to scale campaigns instantly.
             </p>
           </div>
-          <p style={{ ...inter(400, 13), color: C.textSub, marginBottom: 14 }}>This shift is already happening across the industry.</p>
-          <p style={{ ...inter(700, 13, "0.06em"), color: C.text, textTransform: "uppercase" }}>We can teach you the systems that make this possible.</p>
+          <p className="mb-3.5 text-[13px]" style={{ color: C.textSub }}>This shift is already happening across the industry.</p>
+          <p className="text-[13px] font-bold uppercase tracking-[0.06em]">We can teach you the systems that make this possible.</p>
         </div>
       </section>
 
-      {/* ── WHAT YOU GET ────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "0 24px 56px" }}>
-        <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          <h2 style={{ ...inter(800, 28, "-0.01em"), color: C.text, textAlign: "center", marginBottom: 36 }}>
+      {/* ═══ WHAT YOU GET ═══ */}
+      <section className="px-6 pb-14">
+        <div className="mx-auto max-w-[860px]">
+          <h2 className="mb-9 text-center text-[26px] md:text-[28px] font-extrabold tracking-[-0.01em]">
             This is what you get once inside
           </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="flex flex-col gap-3">
             {[
               { title: "15 Step-by-Step Video Lessons (20+ Hours of Training)", worth: "Worth 1,497€", desc: "Learn how to build your AI avatar, create realistic visuals, animate your character, and turn everything into complete content and campaigns." },
               { title: "15+ Downloadable Bonus Materials", worth: "Worth 297€", desc: "Step-by-step guides, checklists, templates, troubleshooting tips, and our curated prompt collection to speed up your workflow." },
@@ -752,107 +719,118 @@ export default function App() {
               { title: "Lifetime Access & Updates", worth: "Priceless", desc: "The AI industry evolves fast — and so will the course. You'll receive future updates and new tool integrations to ensure your skills never become outdated." },
             ].map((item, i) => (
               <Card key={i}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 8 }}>
-                  <p style={{ ...inter(700, 12, "0.05em"), color: C.text, textTransform: "uppercase" }}>{item.title}</p>
-                  <p style={{ ...inter(700, 12, "0.05em"), color: C.purple, flexShrink: 0 }}>{item.worth}</p>
+                <div className="mb-2 flex items-start justify-between gap-4">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.05em]">{item.title}</p>
+                  <p className="flex-shrink-0 text-[12px] font-bold" style={{ color: C.purple }}>{item.worth}</p>
                 </div>
-                <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65 }}>{item.desc}</p>
+                <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{item.desc}</p>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PLUS BONUSES ────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "0 24px 24px" }}>
-        <div style={{ maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ ...inter(800, 36, "-0.01em"), color: C.text, marginBottom: 4 }}>Plus</p>
-          <p style={{ ...inter(700, 12, "0.1em"), color: C.text, textTransform: "uppercase", marginBottom: 32 }}>These bonuses ($2,466 additional value)</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, textAlign: "left" }}>
+      {/* ═══ PLUS BONUSES ═══ */}
+      <section className="px-6 pb-6">
+        <div className="mx-auto max-w-[860px] text-center">
+          <p className="mb-1 text-[32px] md:text-[36px] font-extrabold tracking-[-0.01em]">Plus</p>
+          <p className="mb-8 text-[12px] font-bold uppercase tracking-[0.1em]">These bonuses ($2,466 additional value)</p>
+          <div className="flex flex-col gap-3 text-left">
             {[
               { title: "Bonus Training Chapters", worth: "Worth 295€", desc: "Additional advanced lessons designed to expand your AI capabilities even further beyond the core avatar workflow." },
               { title: "Contract & Pitch Templates", worth: "Worth 197€", desc: "Proven client scripts, email templates, and ready-to-use contracts to help you land and manage projects professionally." },
               { title: "Community Challenges", worth: "Priceless", desc: "Regular creative challenges inside the community where you can practice your skills, showcase your work, and win prizes." },
             ].map((item, i) => (
               <Card key={i}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 8 }}>
-                  <p style={{ ...inter(700, 12, "0.05em"), color: C.text, textTransform: "uppercase" }}>{item.title}</p>
-                  <p style={{ ...inter(700, 12, "0.05em"), color: C.purple, flexShrink: 0 }}>{item.worth}</p>
+                <div className="mb-2 flex items-start justify-between gap-4">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.05em]">{item.title}</p>
+                  <p className="flex-shrink-0 text-[12px] font-bold" style={{ color: C.purple }}>{item.worth}</p>
                 </div>
-                <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.65 }}>{item.desc}</p>
+                <p className="text-[13px] leading-relaxed" style={{ color: C.textSub }}>{item.desc}</p>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PRICING ─────────────────────────────────────────────────────────── */}
-      <section id="pricing" style={{ backgroundColor: C.bg, padding: "44px 24px 72px" }}>
-        <div style={{ maxWidth: 660, margin: "0 auto" }}>
-          <ArrowDown />
+      {/* ═══ PRICING ═══ */}
+      <section id="pricing" className="px-6 pb-16 pt-11">
+        <div className="mx-auto max-w-[660px]">
+          <ArrowDown className="mx-auto" />
 
-          <div style={{ backgroundColor: C.lavender, border: `1px solid ${C.border}`, borderRadius: 24, overflow: "hidden", marginTop: 16 }}>
-            <div style={{ padding: "36px 40px 28px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>
-              <p style={{ ...inter(600, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 12 }}>Total Value</p>
-              <p style={{ ...inter(800, 36, "-0.02em"), color: C.text }}>2,485€</p>
+          <div className="mt-4 overflow-hidden rounded-3xl" style={{ backgroundColor: C.lavender, border: `1px solid ${C.border}` }}>
+            <div className="px-8 pb-7 pt-9 text-center md:px-10" style={{ borderBottom: `1px solid ${C.border}` }}>
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Total Value</p>
+              <p className="text-[32px] md:text-[36px] font-extrabold tracking-[-0.02em]">2,485€</p>
             </div>
-            <div style={{ padding: "32px 40px 40px", textAlign: "center" }}>
-              <p style={{ ...inter(600, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 18 }}>Your Price</p>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24, marginBottom: 8 }}>
-                <span style={{ ...inter(600, 26), color: `${C.text}55`, textDecoration: "line-through" }}>997€</span>
-                <span style={{ ...inter(800, 54, "-0.02em"), color: C.text }}>497€</span>
+            <div className="px-8 pb-10 pt-8 text-center md:px-10">
+              <p className="mb-4.5 text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Your Price</p>
+              <div className="mb-2 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                <span className="text-[22px] sm:text-[26px] font-semibold line-through" style={{ color: `${C.text}55` }}>997€</span>
+                <span className="text-[42px] sm:text-[54px] font-extrabold tracking-[-0.02em]">497€</span>
               </div>
-              <p style={{ ...inter(600, 11, "0.16em"), color: C.textSub, textTransform: "uppercase", marginBottom: 32 }}>or 3 × 179€</p>
-              <a href="#" style={{ ...pillBtn(C.purple, C.white), fontSize: 13 }}>Enroll Now</a>
-              <p style={{ ...inter(400, 12), color: C.textSub, marginTop: 14 }}>Only 5 spots left at this price</p>
+              <p className="mb-8 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: C.textSub }}>or 3 × 179€</p>
+              <PillButton href="#" variant="purple" className="!text-[13px]">Enroll Now</PillButton>
+              <p className="mt-3.5 text-[12px]" style={{ color: C.textSub }}>Only 5 spots left at this price</p>
             </div>
           </div>
 
-          <Card style={{ marginTop: 14, textAlign: "center" }}>
-            <p style={{ ...inter(400, 13), color: C.textSub, lineHeight: 1.75 }}>
-              When you join, you'll get instant access to all training modules, bonus materials, and resources. The AI space evolves quickly, so we'll continue updating the course with new tools, workflows, and techniques as they emerge — so your skills always stay relevant.
+          <Card className="mt-3.5 text-center">
+            <p className="text-[13px] leading-loose" style={{ color: C.textSub }}>
+              When you join, you'll get instant access to all training modules, bonus materials, and resources. The
+              AI space evolves quickly, so we'll continue updating the course with new tools, workflows, and
+              techniques as they emerge — so your skills always stay relevant.
             </p>
           </Card>
         </div>
       </section>
 
-      {/* ── FAQ ─────────────────────────────────────────────────────────────── */}
-      <section id="faq" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lav2} 50%, ${C.bg} 100%)`, padding: "0 24px 72px" }}>
-        <div style={{ maxWidth: 740, margin: "0 auto" }}>
-          <h2 style={{ ...inter(800, 38, "-0.02em"), color: C.text, textAlign: "center", paddingTop: 24, marginBottom: 36 }}>
+      {/* ═══ FAQ ═══ */}
+      <section id="faq" className="px-6 pb-16" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lav2} 50%, ${C.bg} 100%)` }}>
+        <div className="mx-auto max-w-[740px]">
+          <h2 className="mb-9 pt-6 text-center text-[32px] md:text-[38px] font-extrabold tracking-[-0.02em]">
             Frequently Asked
           </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="flex flex-col gap-2.5">
             {[
               { q: "Do I need any experience with AI or content creation?", a: "No experience needed. This course is built for complete beginners as well as creators who already make content but want to add AI to their workflow. We walk you through every tool step by step." },
               { q: "What exactly will I be able to create after the course?", a: "You'll be able to create your own AI avatar, generate consistent images and scenes, produce product visuals, animate characters into video clips, and assemble full social media campaigns — all without filming yourself." },
               { q: "Do I need expensive software or equipment?", a: "No. All the tools we use have free or low-cost tiers. You only need a laptop and internet connection. We teach you the most cost-effective stack to get professional results." },
               { q: "What if the AI tools change in the future?", a: "That's why we offer lifetime access and updates. As the AI space evolves, we update the course with new tools, workflows, and techniques — so your skills always stay current." },
               { q: "Can this help me make money?", a: "Yes. Students use these skills to monetize as UGC creators, offer AI content services to brands, build their own AI influencer pages, and create scalable campaigns for their own businesses." },
-            ].map((item, i) => <FAQItem key={i} {...item} />)}
+            ].map((item, i) => (
+              <ExpandCard key={i} title={item.q} teaser="" align="left">
+                <p className="text-[13px] leading-relaxed opacity-80">{item.a}</p>
+              </ExpandCard>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── FINAL CTA ───────────────────────────────────────────────────────── */}
-      <section style={{ backgroundColor: C.bg, padding: "0 24px 72px", textAlign: "center" }}>
-        <h2 style={{ ...inter(800, 40, "-0.02em"), color: C.text, marginBottom: 8 }}>Ready to Build?</h2>
-        <p style={{ ...inter(500, 10, "0.2em"), color: C.textSub, textTransform: "uppercase", marginBottom: 32 }}>Join the AI Studio Academy</p>
-        <a href="#pricing" style={{ ...pillBtn(C.purple, C.white), fontSize: 13, marginBottom: 14 }}>Enroll Now</a>
-        <p style={{ ...inter(400, 12), color: C.textSub, marginTop: 14 }}>Only 5 left</p>
+      {/* ═══ FINAL CTA ═══ */}
+      <section className="px-6 pb-16 text-center">
+        <h2 className="mb-2 text-[34px] md:text-[40px] font-extrabold tracking-[-0.02em]">Ready to Build?</h2>
+        <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>
+          Join the AI Studio Academy
+        </p>
+        <PillButton href="#pricing" variant="purple" className="!text-[13px] mb-3.5">Enroll Now</PillButton>
+        <p className="mt-3.5 text-[12px]" style={{ color: C.textSub }}>Only 5 left</p>
       </section>
 
-      {/* ── FOOTER ──────────────────────────────────────────────────────────── */}
-      <footer style={{ borderTop: `1px solid ${C.borderWarm}`, backgroundColor: C.bg, padding: "20px 32px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ ...inter(700, 11, "0.18em"), color: C.text, textTransform: "uppercase" }}>Content Collective AI</span>
-          <div style={{ display: "flex", gap: 28 }}>
-            <a href="mailto:hello@contentcollectiveai.com" style={{ ...inter(500, 11, "0.1em"), color: C.textSub, textDecoration: "none", textTransform: "uppercase" }}>Email</a>
-            <a href="#" style={{ ...inter(500, 11, "0.1em"), color: C.textSub, textDecoration: "none", textTransform: "uppercase" }}>Privacy Policy</a>
+      {/* ═══ FOOTER ═══ */}
+      <footer className="px-6 py-5" style={{ borderTop: `1px solid ${C.borderWarm}` }}>
+        <div className="mx-auto flex max-w-[960px] flex-col sm:flex-row items-center justify-between gap-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em]">Content Collective AI</span>
+          <div className="flex gap-7">
+            <a href="mailto:hello@contentcollectiveai.com" className="text-[11px] font-medium uppercase tracking-[0.1em] no-underline" style={{ color: C.textSub }}>
+              Email
+            </a>
+            <a href="#" className="text-[11px] font-medium uppercase tracking-[0.1em] no-underline" style={{ color: C.textSub }}>
+              Privacy Policy
+            </a>
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

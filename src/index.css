@@ -11,9 +11,9 @@ body {
   color: #3d3b5b;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  margin: 0;
 }
 
-/* hide scrollbar until hover */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #C8C4D8; border-radius: 4px; }
