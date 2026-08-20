@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ── Real photos only (verified — no watermarked/placeholder graphics) ───────
 import imgHero        from "@/assets/703432a5fcb56e67a41d0f46e4538e3a43968100.png";
@@ -145,8 +145,8 @@ function GalleryRow({ images, onImageClick }: { images: string[]; onImageClick: 
 
 /** Card that tilts toward the cursor on hover — inspired by nuovaera.agency's gallery. */
 function TiltCard({
-  children, className = "", onClick,
-}: { children: React.ReactNode; className?: string; onClick?: () => void }) {
+  children, className = "", onClick, extraTransform = "",
+}: { children: React.ReactNode; className?: string; onClick?: () => void; extraTransform?: string }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0, active: false });
 
   function handleMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -163,7 +163,7 @@ function TiltCard({
       onClick={onClick}
       className={className}
       style={{
-        transform: `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.active ? 1.04 : 1})`,
+        transform: `${extraTransform} perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.active ? 1.04 : 1})`,
         transition: tilt.active ? "transform 0.08s ease-out, box-shadow 0.08s ease-out" : "transform 0.45s ease, box-shadow 0.45s ease",
         transformStyle: "preserve-3d",
         boxShadow: tilt.active
@@ -184,7 +184,7 @@ function ExpandingGallery({ images, onImageClick, scrollY }: { images: string[];
     <div className="flex gap-2 px-6 h-[210px] sm:h-[320px]">
       {images.map((src, i) => {
         const isActive = active === i;
-        const drift = (i % 2 === 0 ? 1 : -1) * Math.min(scrollY * 0.025, 16);
+        const drift = (i % 2 === 0 ? 1 : -1) * Math.min(scrollY * 0.06, 34);
         return (
           <div
             key={i}
@@ -292,6 +292,43 @@ function useScrollY() {
   return y;
 }
 
+// ── 3D scroll reveal: sections tilt + rise + fade in as they enter the viewport ─
+function Reveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        transform: visible ? "none" : "perspective(1200px) rotateX(14deg) translateY(70px) scale(0.96)",
+        opacity: visible ? 1 : 0,
+        transition: "transform 1s cubic-bezier(0.22,0.68,0,1.02), opacity 1s ease",
+        transformOrigin: "top center",
+        willChange: "transform, opacity",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 const ROADMAP_STEPS = [
   { icon: "define" as const, label: "Define", sub: "Your Avatar Goal", detail: "Get crystal clear on who your avatar is for — influencer, UGC persona, brand content, or your own AI twin — before you generate a single image." },
   { icon: "design" as const, label: "Design", sub: "Your Character DNA", detail: "Lock in your Character DNA: the exact face, styling, and vibe that stay identical across every future image and video." },
@@ -368,16 +405,19 @@ export default function App() {
       {/* ═══ HERO ═══ */}
       <section className="pb-16" style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)` }}>
         <div className="mx-auto max-w-[1140px] px-6 pt-10">
-          <TiltCard className="relative overflow-hidden rounded-3xl" >
+          <TiltCard
+            className="relative overflow-hidden rounded-3xl"
+            extraTransform={`perspective(1200px) rotateX(${Math.min(scrollY * 0.02, 8)}deg) scale(${1 - Math.min(scrollY * 0.00012, 0.05)})`}
+          >
             <div className="relative h-[420px] md:h-[620px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
               <img
                 src={imgHero}
                 alt="Let AI Pay Your Bills"
                 className="absolute left-0 w-full object-cover block"
                 style={{
-                  height: "130%",
-                  top: `-${Math.min(scrollY * 0.18, 90)}px`,
-                  transform: `scale(${1 + Math.min(scrollY * 0.00025, 0.08)})`,
+                  height: "150%",
+                  top: `-${Math.min(scrollY * 0.4, 220)}px`,
+                  transform: `scale(${1 + Math.min(scrollY * 0.0006, 0.18)})`,
                   transition: "transform 0.05s linear",
                 }}
               />
@@ -405,6 +445,7 @@ export default function App() {
 
       {/* ═══ QUALIFICATION CHECK ═══ */}
       <section className="px-6 py-16">
+        <Reveal>
         <div className="mx-auto max-w-[840px] text-center">
           <SectionLabel>Before you read ahead</SectionLabel>
           <h2 className="mb-11 text-[26px] md:text-[28px] font-extrabold leading-[1.25] tracking-[-0.01em]">
@@ -457,10 +498,12 @@ export default function App() {
             </div>
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ WELCOME ═══ */}
       <section className="px-6 pb-16">
+        <Reveal>
         <div className="mx-auto max-w-[820px] text-center">
           <h2 className="mb-3 text-[20px] md:text-[22px] font-extrabold leading-[1.35] tracking-[-0.01em]">
             Welcome to the new era of content creation.<br />AI avatars, AI campaigns, and content on demand.
@@ -479,10 +522,12 @@ export default function App() {
             ))}
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ PROBLEMS ═══ */}
       <section className="px-6 pb-14">
+        <Reveal>
         <div className="mx-auto max-w-[1100px] text-center">
           <h2 className="mb-2 text-[17px] md:text-[18px] font-extrabold leading-[1.45] tracking-[-0.01em]">
             If it were easy, everyone would already be creating amazing AI content.<br />But the truth is…
@@ -520,10 +565,12 @@ export default function App() {
           <p className="mb-10 text-[13px] font-semibold">That's where this course comes in.</p>
           <div style={{ borderTop: `1px dashed ${C.border}` }} />
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ WORKFLOW GALLERY ═══ */}
       <section>
+        <Reveal>
         <div className="mx-auto max-w-[900px] px-6 pb-7 pt-14 text-center">
           <h2 className="mb-2.5 text-[26px] md:text-[34px] font-extrabold uppercase tracking-[-0.01em]">Master the AI Content Workflow</h2>
           <p className="mb-9 text-[11px] font-bold uppercase leading-relaxed tracking-[0.1em]">
@@ -534,10 +581,12 @@ export default function App() {
         <div className="mb-3" />
         <ExpandingGallery images={row2} onImageClick={setLightbox} scrollY={scrollY} />
         <div className="mb-14" />
+        </Reveal>
       </section>
 
       {/* ═══ CURRICULUM ═══ */}
       <section id="curriculum" className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 35%, ${C.bg} 100%)` }}>
+        <Reveal>
         <div className="mx-auto max-w-[740px] text-center">
           <h2 className="mb-3.5 text-[26px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">Master the AI-powered<br />Creative Workflow</h2>
           <p className="mx-auto mb-3.5 max-w-[560px] text-[10px] font-medium uppercase leading-loose tracking-[0.18em]" style={{ color: C.textSub }}>
@@ -556,10 +605,12 @@ export default function App() {
             ))}
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ VISUAL ROADMAP ═══ */}
       <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)` }}>
+        <Reveal>
         <div className="mx-auto max-w-[900px] text-center">
           <h2 className="mb-2 text-[19px] md:text-[20px] font-extrabold uppercase tracking-[0.04em]">Visual Roadmap</h2>
           <p className="mb-12 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Your step-by-step path to building your AI creation system</p>
@@ -606,10 +657,12 @@ export default function App() {
 
           <PillButton href="#pricing" variant="purple" className="mt-11">Join the Course</PillButton>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ 3 MODULES ═══ */}
       <section className="px-6 py-16">
+        <Reveal>
         <div className="mx-auto max-w-[900px] text-center">
           <SectionLabel>How can you create AI campaigns like this? Introducing…</SectionLabel>
           <h2 className="mb-3.5 text-[24px] md:text-[26px] font-extrabold tracking-[-0.01em]">Let AI Pay Your Bills</h2>
@@ -631,10 +684,12 @@ export default function App() {
             ))}
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section id="testimonials" className="px-6 pb-16">
+        <Reveal>
         <div className="mx-auto max-w-[900px] text-center">
           <h2 className="mb-4 text-[20px] md:text-[22px] font-extrabold leading-[1.35] tracking-[-0.01em]">Trusted by creators, entrepreneurs, and brands<br />learning AI content creation.</h2>
           <div className="mb-1.5"><Stars /></div>
@@ -666,10 +721,12 @@ export default function App() {
             ))}
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ STUDENT WORK ═══ */}
       <section id="success" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lavender} 18%, ${C.lavender} 82%, ${C.bg} 100%)` }}>
+        <Reveal>
         <p className="px-6 pb-5 pt-14 text-center text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Take a look at our students' work:</p>
         <ExpandingGallery images={eyeRow} onImageClick={setLightbox} scrollY={scrollY} />
         <div className="px-6 pb-5 pt-12 text-center">
@@ -677,10 +734,12 @@ export default function App() {
           <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: C.textSub }}>Building avatars, generating visuals, and turning AI into real creative workflows.</p>
           <PillButton href="#pricing" variant="purple">Enroll Now</PillButton>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ FUTURE / COMPARISON ═══ */}
       <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 40%, ${C.bg} 100%)` }}>
+        <Reveal>
         <div className="mx-auto max-w-[840px] text-center">
           <h2 className="mb-4 text-[24px] md:text-[26px] font-extrabold leading-[1.35] tracking-[-0.01em]" style={{ color: C.purple }}>
             The future of content creation is already here.<br />The question is: will you be creating it?
@@ -728,10 +787,12 @@ export default function App() {
             </h3>
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ AHEAD OF THE GAME ═══ */}
       <section className="px-6 py-16">
+        <Reveal>
         <div className="mx-auto max-w-[840px] text-center">
           <ArrowDown className="mx-auto" />
           <h2 className="my-3 mb-9 text-[20px] md:text-[22px] font-extrabold uppercase tracking-[-0.01em]">This is your chance to be ahead of the game</h2>
@@ -760,10 +821,12 @@ export default function App() {
             These are examples of projects created using the techniques taught in the course.<br />Results will vary depending on how you apply the system.
           </p>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ WHY DEMAND ═══ */}
       <section className="px-6 pb-16">
+        <Reveal>
         <div className="mx-auto max-w-[700px] text-center">
           <h2 className="mb-3.5 text-[26px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">Why is demand for AI content exploding?</h2>
           <p className="mb-6 text-[14px] leading-relaxed" style={{ color: C.textSub }}>Because brands need more content, faster — without the cost of traditional production.</p>
@@ -773,11 +836,13 @@ export default function App() {
           <p className="mb-3.5 text-[13px]" style={{ color: C.textSub }}>This shift is already happening across the industry.</p>
           <p className="text-[13px] font-bold uppercase tracking-[0.06em]">We can teach you the systems that make this possible.</p>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ WHAT YOU GET ═══ */}
       <section className="px-6 pb-14">
-        <div className="mx-auto max-w-[860px]">
+        <Reveal>
+        <div className="mx-auto max-w-[1080px]">
           <h2 className="mb-9 text-center text-[26px] md:text-[28px] font-extrabold tracking-[-0.01em]">This is what you get once inside</h2>
           <div className="flex flex-col gap-3">
             {[
@@ -796,11 +861,13 @@ export default function App() {
             ))}
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ PLUS BONUSES ═══ */}
       <section className="px-6 pb-6">
-        <div className="mx-auto max-w-[860px] text-center">
+        <Reveal>
+        <div className="mx-auto max-w-[1080px] text-center">
           <p className="mb-1 text-[32px] md:text-[36px] font-extrabold tracking-[-0.01em]">Plus</p>
           <p className="mb-8 text-[12px] font-bold uppercase tracking-[0.1em]">These bonuses ($2,466 additional value)</p>
           <div className="flex flex-col gap-3 text-left">
@@ -819,10 +886,12 @@ export default function App() {
             ))}
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ PRICING ═══ */}
       <section id="pricing" className="px-6 pb-16 pt-11">
+        <Reveal>
         <div className="mx-auto max-w-[660px]">
           <ArrowDown className="mx-auto" />
 
@@ -852,10 +921,12 @@ export default function App() {
             </p>
           </Card>
         </div>
+        </Reveal>
       </section>
 
       {/* ═══ FAQ + FINAL CTA + FOOTER (one continuous panel) ═══ */}
       <section id="faq" className="pt-16 pb-0" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lav2} 45%, ${C.lavender} 100%)` }}>
+        <Reveal>
         <div className="mx-auto max-w-[740px] px-6">
           <h2 className="mb-9 text-center text-[32px] md:text-[38px] font-extrabold tracking-[-0.02em]">Frequently Asked</h2>
           <div className="flex flex-col gap-2.5">
@@ -891,6 +962,7 @@ export default function App() {
             </div>
           </div>
         </footer>
+        </Reveal>
       </section>
     </div>
   );
