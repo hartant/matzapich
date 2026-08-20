@@ -143,6 +143,39 @@ function GalleryRow({ images, onImageClick }: { images: string[]; onImageClick: 
   );
 }
 
+/** Click a panel to expand it (others shrink). Click the already-active panel to zoom it full-screen. */
+function ExpandingGallery({ images, onImageClick }: { images: string[]; onImageClick: (src: string) => void }) {
+  const [active, setActive] = useState(0);
+  return (
+    <div className="flex gap-2 px-6 h-[210px] sm:h-[320px]">
+      {images.map((src, i) => {
+        const isActive = active === i;
+        return (
+          <div
+            key={i}
+            onClick={() => (isActive ? onImageClick(src) : setActive(i))}
+            className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 ease-out"
+            style={{ flexGrow: isActive ? 6 : 1, flexBasis: 0, minWidth: isActive ? 110 : 36, backgroundColor: C.lavender }}
+          >
+            <img src={src} alt="" className="h-full w-full object-cover block transition-transform duration-500" style={{ transform: isActive ? "scale(1)" : "scale(1.15)" }} />
+            {!isActive && <div className="absolute inset-0" style={{ background: "rgba(30,25,50,0.18)" }} />}
+            {isActive && (
+              <div
+                className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm"
+                style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.text} strokeWidth="2" strokeLinecap="round">
+                  <circle cx="10.5" cy="10.5" r="6.5" /><line x1="15.3" y1="15.3" x2="21" y2="21" />
+                </svg>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function ExpandCard({
   title, teaser, children, align = "center", tint = false,
 }: { title: string; teaser: string; children: React.ReactNode; align?: "center" | "left"; tint?: boolean }) {
@@ -169,15 +202,16 @@ function ExpandCard({
 }
 
 // ── Custom line-icon set for the Visual Roadmap (replaces watermarked PNGs) ─
-function RoadmapIcon({ name }: { name: "define" | "design" | "generate" | "expand" | "animate" | "scale" }) {
-  const p = { fill: "none", stroke: C.purple, strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+function RoadmapIcon({ name, inverted = false }: { name: "define" | "design" | "generate" | "expand" | "animate" | "scale"; inverted?: boolean }) {
+  const strokeColor = inverted ? C.white : C.purple;
+  const p = { fill: "none", stroke: strokeColor, strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   const icons: Record<typeof name, React.ReactNode> = {
     define: (
       <svg width="26" height="26" viewBox="0 0 24 24" {...p}><circle cx="10.5" cy="10.5" r="6.5" /><line x1="15.3" y1="15.3" x2="21" y2="21" /></svg>
     ),
     design: (
       <svg width="26" height="26" viewBox="0 0 24 24" {...p}>
-        <path d="M9 15l-5 5 1-4 8-8" /><path d="M13 8l3-3 3 3-3 3z" /><circle cx="18" cy="6" r="1.3" fill={C.purple} stroke="none" />
+        <path d="M9 15l-5 5 1-4 8-8" /><path d="M13 8l3-3 3 3-3 3z" /><circle cx="18" cy="6" r="1.3" fill={strokeColor} stroke="none" />
       </svg>
     ),
     generate: (
@@ -189,7 +223,7 @@ function RoadmapIcon({ name }: { name: "define" | "design" | "generate" | "expan
       </svg>
     ),
     animate: (
-      <svg width="26" height="26" viewBox="0 0 24 24" {...p}><circle cx="12" cy="12" r="9" /><path d="M10 8.5l6 3.5-6 3.5z" fill={C.purple} stroke="none" /></svg>
+      <svg width="26" height="26" viewBox="0 0 24 24" {...p}><circle cx="12" cy="12" r="9" /><path d="M10 8.5l6 3.5-6 3.5z" fill={strokeColor} stroke="none" /></svg>
     ),
     scale: (
       <svg width="26" height="26" viewBox="0 0 24 24" {...p}>
@@ -199,12 +233,17 @@ function RoadmapIcon({ name }: { name: "define" | "design" | "generate" | "expan
       </svg>
     ),
   };
-  return (
-    <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-[18px]" style={{ backgroundColor: C.lavStrong, border: `1.5px solid ${C.purple}55` }}>
-      {icons[name]}
-    </div>
-  );
+  return icons[name];
 }
+
+const ROADMAP_STEPS = [
+  { icon: "define" as const, label: "Define", sub: "Your Avatar Goal", detail: "Get crystal clear on who your avatar is for — influencer, UGC persona, brand content, or your own AI twin — before you generate a single image." },
+  { icon: "design" as const, label: "Design", sub: "Your Character DNA", detail: "Lock in your Character DNA: the exact face, styling, and vibe that stay identical across every future image and video." },
+  { icon: "generate" as const, label: "Generate", sub: "Your Base Images", detail: "Produce your first set of realistic base images using your Character DNA as the reusable foundation." },
+  { icon: "expand" as const, label: "Expand", sub: "Scenes & Variations", detail: "Multiply your avatar into new scenes, outfits, and aesthetics — lifestyle, product, and campaign visuals." },
+  { icon: "animate" as const, label: "Animate", sub: "Images Into Video", detail: "Bring stills to life with talking clips, B-roll, voice, and movement — ready to post." },
+  { icon: "scale" as const, label: "Scale", sub: "A Profitable Business", detail: "Turn the system into a repeatable content engine you run for yourself or offer as a paid service." },
+];
 
 // ═════════════════════════════════════════════════════════════════════════
 // APP
@@ -212,6 +251,7 @@ function RoadmapIcon({ name }: { name: "define" | "design" | "generate" | "expan
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   // Only real photos, deliberately varied and never repeating the watermarked assets.
   const row1 = [imgPortrait2, imgPortrait3, imgPortrait4, imgPortrait7, imgPortrait12, imgPortrait13];
@@ -421,9 +461,9 @@ export default function App() {
             These are the types of content and visuals you'll learn<br className="hidden sm:block" /> how to create inside the course.
           </p>
         </div>
-        <GalleryRow images={row1} onImageClick={setLightbox} />
+        <ExpandingGallery images={row1} onImageClick={setLightbox} />
         <div className="mb-3" />
-        <GalleryRow images={row2} onImageClick={setLightbox} />
+        <ExpandingGallery images={row2} onImageClick={setLightbox} />
         <div className="mb-14" />
       </section>
 
@@ -456,24 +496,44 @@ export default function App() {
           <p className="mb-12 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Your step-by-step path to building your AI creation system</p>
 
           <div className="flex flex-wrap items-start justify-center gap-1.5">
-            {[
-              { icon: "define" as const, label: "Define", sub: "Your Avatar Goal" },
-              { icon: "design" as const, label: "Design", sub: "Your Character DNA" },
-              { icon: "generate" as const, label: "Generate", sub: "Your Base Images" },
-              { icon: "expand" as const, label: "Expand", sub: "Scenes & Variations" },
-              { icon: "animate" as const, label: "Animate", sub: "Images Into Video" },
-              { icon: "scale" as const, label: "Scale", sub: "A Profitable Business" },
-            ].map((step, i, arr) => (
-              <div key={i} className="flex items-center gap-1.5">
-                <div className="w-[84px] sm:w-[88px] text-center">
-                  <RoadmapIcon name={step.icon} />
-                  <p className="mb-0.5 text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.06em]">{step.label}</p>
-                  <p className="text-[9.5px] sm:text-[10px] leading-tight" style={{ color: C.textSub }}>{step.sub}</p>
+            {ROADMAP_STEPS.map((step, i, arr) => {
+              const isActive = activeStep === i;
+              return (
+                <div key={i} className="flex items-center gap-1.5">
+                  <div
+                    onClick={() => setActiveStep(isActive ? null : i)}
+                    className="w-[84px] sm:w-[88px] text-center cursor-pointer"
+                  >
+                    <div
+                      className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-[18px] transition-all"
+                      style={{
+                        backgroundColor: isActive ? C.purple : C.lavStrong,
+                        border: `1.5px solid ${isActive ? C.purple : `${C.purple}55`}`,
+                        boxShadow: isActive ? "0 8px 20px rgba(136,143,205,0.45)" : "none",
+                      }}
+                    >
+                      <RoadmapIcon name={step.icon} inverted={isActive} />
+                    </div>
+                    <p className="mb-0.5 text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.06em]">{step.label}</p>
+                    <p className="text-[9.5px] sm:text-[10px] leading-tight" style={{ color: C.textSub }}>{step.sub}</p>
+                  </div>
+                  {i < arr.length - 1 && <span className="mb-6 flex-shrink-0 text-lg" style={{ color: C.purple }}>→</span>}
                 </div>
-                {i < arr.length - 1 && <span className="mb-6 flex-shrink-0 text-lg" style={{ color: C.purple }}>→</span>}
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          {activeStep !== null && (
+            <div
+              className="mx-auto mt-8 max-w-[560px] rounded-2xl px-7 py-6 text-left"
+              style={{ backgroundColor: C.white, border: `1px solid ${C.purple}55` }}
+            >
+              <p className="mb-1.5 text-[12px] font-extrabold uppercase tracking-[0.08em]" style={{ color: C.purple }}>
+                {ROADMAP_STEPS[activeStep].label} — {ROADMAP_STEPS[activeStep].sub}
+              </p>
+              <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{ROADMAP_STEPS[activeStep].detail}</p>
+            </div>
+          )}
 
           <PillButton href="#pricing" variant="purple" className="mt-11">Join the Course</PillButton>
         </div>
@@ -542,7 +602,7 @@ export default function App() {
       {/* ═══ STUDENT WORK ═══ */}
       <section id="success" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lavender} 18%, ${C.lavender} 82%, ${C.bg} 100%)` }}>
         <p className="px-6 pb-5 pt-14 text-center text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Take a look at our students' work:</p>
-        <GalleryRow images={eyeRow} onImageClick={setLightbox} />
+        <ExpandingGallery images={eyeRow} onImageClick={setLightbox} />
         <div className="px-6 pb-5 pt-12 text-center">
           <p className="mb-1.5 text-[13px] font-bold uppercase tracking-[0.08em]">Our students are already learning how to create content with AI</p>
           <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: C.textSub }}>Building avatars, generating visuals, and turning AI into real creative workflows.</p>
