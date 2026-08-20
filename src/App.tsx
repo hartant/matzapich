@@ -143,6 +143,39 @@ function GalleryRow({ images, onImageClick }: { images: string[]; onImageClick: 
   );
 }
 
+/** Card that tilts toward the cursor on hover — inspired by nuovaera.agency's gallery. */
+function TiltCard({
+  children, className = "", onClick,
+}: { children: React.ReactNode; className?: string; onClick?: () => void }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0, active: false });
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: py * -14, y: px * 14, active: true });
+  }
+
+  return (
+    <div
+      onMouseMove={handleMove}
+      onMouseLeave={() => setTilt({ x: 0, y: 0, active: false })}
+      onClick={onClick}
+      className={className}
+      style={{
+        transform: `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.active ? 1.04 : 1})`,
+        transition: tilt.active ? "transform 0.08s ease-out, box-shadow 0.08s ease-out" : "transform 0.45s ease, box-shadow 0.45s ease",
+        transformStyle: "preserve-3d",
+        boxShadow: tilt.active
+          ? `${-tilt.y * 1.4}px ${-tilt.x * 1.4 + 14}px 28px rgba(61,59,91,0.28)`
+          : "0 0px 0px rgba(0,0,0,0)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /** Click a panel to expand it (others shrink). Click the already-active panel to zoom it full-screen. */
 function ExpandingGallery({ images, onImageClick }: { images: string[]; onImageClick: (src: string) => void }) {
   const [active, setActive] = useState(0);
@@ -428,7 +461,7 @@ export default function App() {
               { img: imgPortrait3, label: "No clear workflow", fix: "Our step-by-step roadmap" },
             ].map((c, i) => (
               <div key={i}>
-                <div className="relative mb-2.5 overflow-hidden rounded-2xl cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(c.img)}>
+                <TiltCard onClick={() => setLightbox(c.img)} className="relative mb-2.5 overflow-hidden rounded-2xl cursor-zoom-in" >
                   <img src={c.img} alt={c.label} className="h-[150px] sm:h-[172px] w-full object-cover block" />
                   <div className="absolute top-2 left-2">
                     <span className="rounded-full px-2.5 py-1 text-[8px] sm:text-[9px] font-semibold" style={{ backgroundColor: "rgba(255,255,255,0.9)" }}>Plastic skin, weird hands</span>
@@ -436,7 +469,7 @@ export default function App() {
                   <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 pt-7" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.7) 0%, transparent 100%)" }}>
                     <p className="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-[0.08em] text-white">{c.label}</p>
                   </div>
-                </div>
+                </TiltCard>
                 <div className="rounded-xl px-3 py-2.5 text-center" style={{ backgroundColor: C.white, border: `1px solid ${C.border}` }}>
                   <p className="mb-1 text-[9px] sm:text-[9.5px] font-semibold uppercase tracking-[0.12em]" style={{ color: C.textSub }}>Fixed with</p>
                   <p className="text-[10.5px] sm:text-[11.5px] leading-tight">{c.fix}</p>
