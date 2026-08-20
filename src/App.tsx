@@ -446,7 +446,7 @@ export default function App() {
       {/* ═══ QUALIFICATION CHECK ═══ */}
       <section className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[840px] text-center">
+        <div className="mx-auto max-w-[1000px] text-center">
           <SectionLabel>Before you read ahead</SectionLabel>
           <h2 className="mb-11 text-[26px] md:text-[28px] font-extrabold leading-[1.25] tracking-[-0.01em]">
             This course isn't for everyone.<br />Let's see if it's for you.
@@ -504,7 +504,7 @@ export default function App() {
       {/* ═══ WELCOME ═══ */}
       <section className="px-6 pb-16">
         <Reveal>
-        <div className="mx-auto max-w-[820px] text-center">
+        <div className="mx-auto max-w-[1000px] text-center">
           <h2 className="mb-3 text-[20px] md:text-[22px] font-extrabold leading-[1.35] tracking-[-0.01em]">
             Welcome to the new era of content creation.<br />AI avatars, AI campaigns, and content on demand.
           </h2>
@@ -571,7 +571,7 @@ export default function App() {
       {/* ═══ WORKFLOW GALLERY ═══ */}
       <section>
         <Reveal>
-        <div className="mx-auto max-w-[900px] px-6 pb-7 pt-14 text-center">
+        <div className="mx-auto max-w-[1100px] px-6 pb-7 pt-14 text-center">
           <h2 className="mb-2.5 text-[26px] md:text-[34px] font-extrabold uppercase tracking-[-0.01em]">Master the AI Content Workflow</h2>
           <p className="mb-9 text-[11px] font-bold uppercase leading-relaxed tracking-[0.1em]">
             These are the types of content and visuals you'll learn<br className="hidden sm:block" /> how to create inside the course.
@@ -587,7 +587,7 @@ export default function App() {
       {/* ═══ CURRICULUM ═══ */}
       <section id="curriculum" className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 35%, ${C.bg} 100%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[740px] text-center">
+        <div className="mx-auto max-w-[960px] text-center">
           <h2 className="mb-3.5 text-[26px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">Master the AI-powered<br />Creative Workflow</h2>
           <p className="mx-auto mb-3.5 max-w-[560px] text-[10px] font-medium uppercase leading-loose tracking-[0.18em]" style={{ color: C.textSub }}>
             The complete system for professionals to deliver high-end creative AI campaigns, build industry-ready skills, and stay ahead of the future of creative work.
@@ -611,7 +611,7 @@ export default function App() {
       {/* ═══ VISUAL ROADMAP ═══ */}
       <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lav2} 0%, ${C.bg} 100%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[900px] text-center">
+        <div className="mx-auto max-w-[1100px] text-center">
           <h2 className="mb-2 text-[19px] md:text-[20px] font-extrabold uppercase tracking-[0.04em]">Visual Roadmap</h2>
           <p className="mb-12 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Your step-by-step path to building your AI creation system</p>
 
@@ -663,7 +663,7 @@ export default function App() {
       {/* ═══ 3 MODULES ═══ */}
       <section className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[900px] text-center">
+        <div className="mx-auto max-w-[1100px] text-center">
           <SectionLabel>How can you create AI campaigns like this? Introducing…</SectionLabel>
           <h2 className="mb-3.5 text-[24px] md:text-[26px] font-extrabold tracking-[-0.01em]">Let AI Pay Your Bills</h2>
           <p className="mx-auto mb-11 max-w-[520px] text-[14px] leading-loose" style={{ color: C.textSub }}>
@@ -690,7 +690,7 @@ export default function App() {
       {/* ═══ TESTIMONIALS ═══ */}
       <section id="testimonials" className="px-6 pb-16">
         <Reveal>
-        <div className="mx-auto max-w-[900px] text-center">
+        <div className="mx-auto max-w-[1100px] text-center">
           <h2 className="mb-4 text-[20px] md:text-[22px] font-extrabold leading-[1.35] tracking-[-0.01em]">Trusted by creators, entrepreneurs, and brands<br />learning AI content creation.</h2>
           <div className="mb-1.5"><Stars /></div>
           <p className="mb-9 text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Rated 5 stars by students</p>
@@ -708,7 +708,7 @@ export default function App() {
               </Card>
             ))}
           </div>
-          <div className="mx-auto grid max-w-[600px] grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="mx-auto grid max-w-[700px] grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { name: "Chiara B.", text: "As a brand owner I was spending thousands on photographers. Now I produce my own campaign visuals with AI. The quality is genuinely impressive." },
               { name: "Jess T.", text: "I tried three other AI courses and none of them showed me what this one does. The roadmap makes everything click — it's a proper system, not just tips." },
@@ -740,7 +740,7 @@ export default function App() {
       {/* ═══ FUTURE / COMPARISON ═══ */}
       <section className="px-6 py-16" style={{ background: `linear-gradient(180deg, ${C.lavender} 0%, ${C.lav2} 40%, ${C.bg} 100%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[840px] text-center">
+        <div className="mx-auto max-w-[1080px] text-center">
           <h2 className="mb-4 text-[24px] md:text-[26px] font-extrabold leading-[1.35] tracking-[-0.01em]" style={{ color: C.purple }}>
             The future of content creation is already here.<br />The question is: will you be creating it?
           </h2>
@@ -749,7 +749,7 @@ export default function App() {
           </p>
           <p className="mx-auto mb-10 max-w-[540px] text-[14px] leading-loose opacity-85">Instead of watching the AI revolution from the sidelines, you'll learn how to actually use it.</p>
 
-          <div className="mx-auto mb-16 grid max-w-[800px] grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-0">
+          <div className="mx-auto mb-16 grid max-w-[950px] grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-0">
             <Card>
               <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: C.textSub }}>Without this course</p>
               {["Random prompting and inconsistent results", "AI images that look fake or unusable", "No consistent avatar or character", "No idea how to turn images into real content", "Constantly testing tools without a clear workflow"].map((t, i) => (
@@ -793,10 +793,10 @@ export default function App() {
       {/* ═══ AHEAD OF THE GAME ═══ */}
       <section className="px-6 py-16">
         <Reveal>
-        <div className="mx-auto max-w-[840px] text-center">
+        <div className="mx-auto max-w-[1080px] text-center">
           <ArrowDown className="mx-auto" />
           <h2 className="my-3 mb-9 text-[20px] md:text-[22px] font-extrabold uppercase tracking-[-0.01em]">This is your chance to be ahead of the game</h2>
-          <div className="mx-auto mb-8 grid max-w-[680px] grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="mx-auto mb-8 grid max-w-[780px] grid-cols-2 sm:grid-cols-3 gap-3">
             {aheadRow.map((src, i) => (
               <ZoomImg key={i} src={src} onClick={setLightbox} className="h-[170px] sm:h-[220px] rounded-2xl" />
             ))}
@@ -827,7 +827,7 @@ export default function App() {
       {/* ═══ WHY DEMAND ═══ */}
       <section className="px-6 pb-16">
         <Reveal>
-        <div className="mx-auto max-w-[700px] text-center">
+        <div className="mx-auto max-w-[900px] text-center">
           <h2 className="mb-3.5 text-[26px] md:text-[28px] font-extrabold leading-[1.3] tracking-[-0.01em]">Why is demand for AI content exploding?</h2>
           <p className="mb-6 text-[14px] leading-relaxed" style={{ color: C.textSub }}>Because brands need more content, faster — without the cost of traditional production.</p>
           <div className="mb-4.5 rounded-2xl px-7 py-6 md:px-9" style={{ backgroundColor: C.lav2, border: `1.5px solid ${C.border}` }}>
@@ -892,7 +892,7 @@ export default function App() {
       {/* ═══ PRICING ═══ */}
       <section id="pricing" className="px-6 pb-16 pt-11">
         <Reveal>
-        <div className="mx-auto max-w-[660px]">
+        <div className="mx-auto max-w-[760px]">
           <ArrowDown className="mx-auto" />
 
           <div className="mt-4 overflow-hidden rounded-3xl" style={{ backgroundColor: C.lavStrong, border: `1px solid ${C.purple}55` }}>
@@ -927,7 +927,7 @@ export default function App() {
       {/* ═══ FAQ + FINAL CTA + FOOTER (one continuous panel) ═══ */}
       <section id="faq" className="pt-16 pb-0" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lav2} 45%, ${C.lavender} 100%)` }}>
         <Reveal>
-        <div className="mx-auto max-w-[740px] px-6">
+        <div className="mx-auto max-w-[900px] px-6">
           <h2 className="mb-9 text-center text-[32px] md:text-[38px] font-extrabold tracking-[-0.02em]">Frequently Asked</h2>
           <div className="flex flex-col gap-2.5">
             {[
