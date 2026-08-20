@@ -343,9 +343,11 @@ export default function App() {
 
       {/* ═══ HERO ═══ */}
       <section className="pb-16" style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)` }}>
-        <div className="mx-auto max-w-[960px] px-6 pt-10">
-          <div className="relative overflow-hidden rounded-3xl" style={{ backgroundColor: C.lavender }}>
-            <ZoomImg src={imgHero} alt="Let AI Pay Your Bills" onClick={setLightbox} className="h-[380px] md:h-[540px] w-full" />
+        <div className="mx-auto max-w-[1140px] px-6 pt-10">
+          <TiltCard className="relative overflow-hidden rounded-3xl" >
+            <div style={{ backgroundColor: C.lavender }}>
+              <ZoomImg src={imgHero} alt="Let AI Pay Your Bills" onClick={setLightbox} className="h-[420px] md:h-[620px] w-full" />
+            </div>
             <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)" }} />
 
             <div className="absolute top-4 right-4 flex items-center gap-2 rounded-full px-4 py-1.5 backdrop-blur-md" style={{ backgroundColor: "rgba(61,59,91,0.55)" }}>
@@ -353,8 +355,8 @@ export default function App() {
               <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white whitespace-nowrap">400+ Students</span>
             </div>
 
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[520px] px-6 pb-8 md:px-11 md:pb-11">
-              <h1 className="mb-3 text-[28px] sm:text-[32px] md:text-[38px] font-extrabold leading-[1.15] tracking-[-0.01em] text-white uppercase">
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-[580px] px-6 pb-8 md:px-11 md:pb-11">
+              <h1 className="mb-3 text-[30px] sm:text-[36px] md:text-[42px] font-extrabold leading-[1.15] tracking-[-0.01em] text-white uppercase">
                 Let AI Pay Your Bills
               </h1>
               <p className="mb-6 text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.82)" }}>
@@ -363,7 +365,7 @@ export default function App() {
               </p>
               <PillButton href="#pricing" variant="light" className="!text-[12px] pointer-events-auto">Build Your Avatar</PillButton>
             </div>
-          </div>
+          </TiltCard>
         </div>
       </section>
 
@@ -447,13 +449,13 @@ export default function App() {
 
       {/* ═══ PROBLEMS ═══ */}
       <section className="px-6 pb-14">
-        <div className="mx-auto max-w-[900px] text-center">
+        <div className="mx-auto max-w-[1100px] text-center">
           <h2 className="mb-2 text-[17px] md:text-[18px] font-extrabold leading-[1.45] tracking-[-0.01em]">
             If it were easy, everyone would already be creating amazing AI content.<br />But the truth is…
           </h2>
           <p className="mb-9 text-[13px] font-bold uppercase tracking-[0.06em]">Most people trying AI run into the same problems.</p>
 
-          <div className="mb-9 grid grid-cols-2 md:grid-cols-4 gap-3.5">
+          <div className="mb-9 grid grid-cols-2 md:grid-cols-4 gap-5">
             {[
               { img: imgHero, label: "Fake-looking results", fix: "Our Character DNA system" },
               { img: imgPortrait1, label: "Bad prompting", fix: "Our curated prompt library" },
@@ -462,7 +464,7 @@ export default function App() {
             ].map((c, i) => (
               <div key={i}>
                 <TiltCard onClick={() => setLightbox(c.img)} className="relative mb-2.5 overflow-hidden rounded-2xl cursor-zoom-in" >
-                  <img src={c.img} alt={c.label} className="h-[150px] sm:h-[172px] w-full object-cover block" />
+                  <img src={c.img} alt={c.label} className="h-[200px] sm:h-[240px] w-full object-cover block" />
                   <div className="absolute top-2 left-2">
                     <span className="rounded-full px-2.5 py-1 text-[8px] sm:text-[9px] font-semibold" style={{ backgroundColor: "rgba(255,255,255,0.9)" }}>Plastic skin, weird hands</span>
                   </div>
