@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ── Real photos only (verified — no watermarked/placeholder graphics) ───────
 import imgHero        from "@/assets/703432a5fcb56e67a41d0f46e4538e3a43968100.png";
@@ -176,13 +176,15 @@ function TiltCard({
   );
 }
 
-/** Click a panel to expand it (others shrink). Click the already-active panel to zoom it full-screen. */
-function ExpandingGallery({ images, onImageClick }: { images: string[]; onImageClick: (src: string) => void }) {
+/** Click a panel to expand it (others shrink). Click the already-active panel to zoom it full-screen.
+ *  Alternating panels also drift vertically as the page scrolls for a layered, artistic depth effect. */
+function ExpandingGallery({ images, onImageClick, scrollY }: { images: string[]; onImageClick: (src: string) => void; scrollY: number }) {
   const [active, setActive] = useState(0);
   return (
     <div className="flex gap-2 px-6 h-[210px] sm:h-[320px]">
       {images.map((src, i) => {
         const isActive = active === i;
+        const drift = (i % 2 === 0 ? 1 : -1) * Math.min(scrollY * 0.025, 16);
         return (
           <div
             key={i}
@@ -190,7 +192,16 @@ function ExpandingGallery({ images, onImageClick }: { images: string[]; onImageC
             className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 ease-out"
             style={{ flexGrow: isActive ? 6 : 1, flexBasis: 0, minWidth: isActive ? 110 : 36, backgroundColor: C.lavender }}
           >
-            <img src={src} alt="" className="h-full w-full object-cover block transition-transform duration-500" style={{ transform: isActive ? "scale(1)" : "scale(1.15)" }} />
+            <img
+              src={src}
+              alt=""
+              className="absolute left-0 w-full object-cover block transition-transform duration-300"
+              style={{
+                height: "122%",
+                top: "-11%",
+                transform: `translateY(${drift}px) scale(${isActive ? 1 : 1.15})`,
+              }}
+            />
             {!isActive && <div className="absolute inset-0" style={{ background: "rgba(30,25,50,0.18)" }} />}
             {isActive && (
               <div
@@ -269,6 +280,18 @@ function RoadmapIcon({ name, inverted = false }: { name: "define" | "design" | "
   return icons[name];
 }
 
+// ── Scroll tracking for parallax effects ────────────────────────────────────
+function useScrollY() {
+  const [y, setY] = useState(0);
+  useEffect(() => {
+    const onScroll = () => setY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return y;
+}
+
 const ROADMAP_STEPS = [
   { icon: "define" as const, label: "Define", sub: "Your Avatar Goal", detail: "Get crystal clear on who your avatar is for — influencer, UGC persona, brand content, or your own AI twin — before you generate a single image." },
   { icon: "design" as const, label: "Design", sub: "Your Character DNA", detail: "Lock in your Character DNA: the exact face, styling, and vibe that stay identical across every future image and video." },
@@ -285,6 +308,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
+  const scrollY = useScrollY();
 
   // Only real photos, deliberately varied and never repeating the watermarked assets.
   const row1 = [imgPortrait2, imgPortrait3, imgPortrait4, imgPortrait7, imgPortrait12, imgPortrait13];
@@ -345,8 +369,18 @@ export default function App() {
       <section className="pb-16" style={{ background: `radial-gradient(ellipse 90% 55% at 50% 0%, ${C.lavender} 0%, ${C.bg} 68%)` }}>
         <div className="mx-auto max-w-[1140px] px-6 pt-10">
           <TiltCard className="relative overflow-hidden rounded-3xl" >
-            <div style={{ backgroundColor: C.lavender }}>
-              <ZoomImg src={imgHero} alt="Let AI Pay Your Bills" onClick={setLightbox} className="h-[420px] md:h-[620px] w-full" />
+            <div className="relative h-[420px] md:h-[620px] w-full cursor-zoom-in" style={{ backgroundColor: C.lavender }} onClick={() => setLightbox(imgHero)}>
+              <img
+                src={imgHero}
+                alt="Let AI Pay Your Bills"
+                className="absolute left-0 w-full object-cover block"
+                style={{
+                  height: "130%",
+                  top: `-${Math.min(scrollY * 0.18, 90)}px`,
+                  transform: `scale(${1 + Math.min(scrollY * 0.00025, 0.08)})`,
+                  transition: "transform 0.05s linear",
+                }}
+              />
             </div>
             <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,25,50,0.68) 0%, rgba(0,0,0,0) 55%)" }} />
 
@@ -496,9 +530,9 @@ export default function App() {
             These are the types of content and visuals you'll learn<br className="hidden sm:block" /> how to create inside the course.
           </p>
         </div>
-        <ExpandingGallery images={row1} onImageClick={setLightbox} />
+        <ExpandingGallery images={row1} onImageClick={setLightbox} scrollY={scrollY} />
         <div className="mb-3" />
-        <ExpandingGallery images={row2} onImageClick={setLightbox} />
+        <ExpandingGallery images={row2} onImageClick={setLightbox} scrollY={scrollY} />
         <div className="mb-14" />
       </section>
 
@@ -637,7 +671,7 @@ export default function App() {
       {/* ═══ STUDENT WORK ═══ */}
       <section id="success" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.lavender} 18%, ${C.lavender} 82%, ${C.bg} 100%)` }}>
         <p className="px-6 pb-5 pt-14 text-center text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: C.textSub }}>Take a look at our students' work:</p>
-        <ExpandingGallery images={eyeRow} onImageClick={setLightbox} />
+        <ExpandingGallery images={eyeRow} onImageClick={setLightbox} scrollY={scrollY} />
         <div className="px-6 pb-5 pt-12 text-center">
           <p className="mb-1.5 text-[13px] font-bold uppercase tracking-[0.08em]">Our students are already learning how to create content with AI</p>
           <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: C.textSub }}>Building avatars, generating visuals, and turning AI into real creative workflows.</p>
